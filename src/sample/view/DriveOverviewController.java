@@ -67,7 +67,8 @@ public class DriveOverviewController {
             labelDistance.setText(String.valueOf(drive.getDistance()));
             labelPrice.setText(String.valueOf(drive.getPrice()));
             List<String> intermediateNames = new ArrayList<>();
-            drive.getListOfIntermediateDrive().forEach(d -> intermediateNames.add(d.getCityFrom()+ " <-> " + d.getCityTo()));
+            intermediateNames.add(drive.getFrom());
+            drive.getListOfIntermediateDrive().forEach(d -> intermediateNames.add(d.getCityTo()));
             ObservableList<String> items =FXCollections.observableArrayList (intermediateNames);
             listIntermediateDrive.setItems(items);
         }else
