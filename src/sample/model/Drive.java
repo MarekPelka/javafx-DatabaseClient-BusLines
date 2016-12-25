@@ -1,6 +1,8 @@
 package sample.model;
 
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -17,7 +19,7 @@ public class Drive {
     private final StringProperty to;
     private final IntegerProperty time;
     private final IntegerProperty distance;
-    private final IntegerProperty price;
+    private final FloatProperty price;
     private final List<IntermediateDrive> listOfIntermediateDrive;
 
     public Drive()
@@ -32,29 +34,29 @@ public class Drive {
         this.to = new SimpleStringProperty(to);
         this.time = new SimpleIntegerProperty(0);
         this.distance = new SimpleIntegerProperty(0);
-        this.price = new SimpleIntegerProperty(0);
+        this.price = new SimpleFloatProperty(0f);
         this.listOfIntermediateDrive = null;
     }
 
-    public Drive(int id, String from, String to, int time, int distance, int price)
+    public Drive(int id, String from, String to, int time, int distance, float price)
     {
     	this.id = id;
         this.from = new SimpleStringProperty(from);
         this.to = new SimpleStringProperty(to);
         this.time = new SimpleIntegerProperty(time);
         this.distance = new SimpleIntegerProperty(distance);
-        this.price = new SimpleIntegerProperty(price);
+        this.price = new SimpleFloatProperty(price);
         this.listOfIntermediateDrive = null;
     }
 
-    public Drive(int id, String from, String to, int time, int distance, int price, List<IntermediateDrive> listOfIntermediateDrive)
+    public Drive(int id, String from, String to, int time, int distance, float price, List<IntermediateDrive> listOfIntermediateDrive)
     {
     	this.id = id;
         this.from = new SimpleStringProperty(from);
         this.to = new SimpleStringProperty(to);
         this.time = new SimpleIntegerProperty(time);
         this.distance = new SimpleIntegerProperty(distance);
-        this.price = new SimpleIntegerProperty(price);
+        this.price = new SimpleFloatProperty(price);
         this.listOfIntermediateDrive = new ArrayList<>(listOfIntermediateDrive);
     }
 
@@ -106,11 +108,11 @@ public class Drive {
         this.distance.set(distance);
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price.get();
     }
 
-    public IntegerProperty priceProperty() {
+    public FloatProperty priceProperty() {
         return price;
     }
 

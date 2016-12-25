@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -16,7 +15,9 @@ import java.util.List;
 import java.util.Properties;
 
 import consts.DriveConsts;
+import consts.IntermediateDriveConsts;
 import sample.model.Drive;
+import sample.model.IntermediateDrive;
 
 public class DataBaseHandler {
 	/** Packet adsress for JDBC driver */
@@ -107,7 +108,11 @@ public class DataBaseHandler {
 	
 	public List<Drive> getAllDrives()
 	{
-		String query = "SELECT * FROM DRIVES";
+		String query = "select d.DRIVE_ID,d.CITY_FROM,d.CITY_TO, sum(idr.DISTANCE) AS DISTANCE_SUM,"
+				+ " sum(idr.PRICE) AS PRICE_SUM, sum(idr.TIME) AS TIME_SUM"
+				+ " from DRIVES d,INTERMEDIATE_DRIVES idr"
+				+ " where  idr.INTERMEDIATE_DRIVE_ID IN (SELECT INTERMEDIATE_DRIVE_ID "
+				+ " FROM DRIVE_CONTENTS WHERE DRIVE_ID=d.DRIVE_ID) group by d.DRIVE_ID,d.CITY_FROM,d.CITY_TO";
 		List<Drive> result = new ArrayList<>();
 		Connection c = null;
 		try
@@ -120,8 +125,46 @@ public class DataBaseHandler {
 			{
 				Drive drive = new Drive(resultSet.getInt(DriveConsts.ID),
 						resultSet.getString(DriveConsts.CITY_FROM),
-						resultSet.getString(DriveConsts.CITY_TO));
+						resultSet.getString(DriveConsts.CITY_TO),
+						resultSet.getInt("TIME_SUM"),
+						resultSet.getInt("DISTANCE_SUM"),
+						resultSet.getFloat("PRICE_SUM"),getAllIntermediateDrives(resultSet.getInt(DriveConsts.ID)));
 				result.add(drive);
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting drives failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return result;
+	}
+	
+	private List<IntermediateDrive> getAllIntermediateDrives(int id)
+	{
+		String query = "select * from INTERMEDIATE_DRIVES WHERE INTERMEDIATE_DRIVE_ID IN "+"(select INTERMEDIATE_DRIVE_ID " 
+						+"from DRIVE_CONTENTS where DRIVE_ID="+id + ")";	
+		List<IntermediateDrive> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			
+			while (resultSet.next())
+			{
+				IntermediateDrive iDrive = new IntermediateDrive(resultSet.getInt(IntermediateDriveConsts.ID),
+						resultSet.getString(IntermediateDriveConsts.CITY_FROM),
+						resultSet.getString(IntermediateDriveConsts.CITY_TO),
+						resultSet.getInt(IntermediateDriveConsts.TIME),
+						resultSet.getInt(IntermediateDriveConsts.DISTANCE),
+						resultSet.getFloat(IntermediateDriveConsts.PRICE));
+				result.add(iDrive);
 			}
 		}
 		catch (SQLException ex)

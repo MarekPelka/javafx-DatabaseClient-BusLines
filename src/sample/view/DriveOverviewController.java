@@ -1,7 +1,16 @@
 package sample.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import sample.controller.MainApp;
 import sample.model.Drive;
 
@@ -57,6 +66,10 @@ public class DriveOverviewController {
             labelTime.setText(String.valueOf(drive.getTime()));
             labelDistance.setText(String.valueOf(drive.getDistance()));
             labelPrice.setText(String.valueOf(drive.getPrice()));
+            List<String> intermediateNames = new ArrayList<>();
+            drive.getListOfIntermediateDrive().forEach(d -> intermediateNames.add(d.getCityFrom()+ " <-> " + d.getCityTo()));
+            ObservableList<String> items =FXCollections.observableArrayList (intermediateNames);
+            listIntermediateDrive.setItems(items);
         }else
         {
             labelFrom.setText("");
