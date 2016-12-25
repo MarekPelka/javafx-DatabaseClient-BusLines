@@ -12,6 +12,7 @@ import java.util.*;
  */
 public class Drive {
 
+	private int id;
     private final StringProperty from;
     private final StringProperty to;
     private final IntegerProperty time;
@@ -21,11 +22,12 @@ public class Drive {
 
     public Drive()
     {
-        this(null, null);
+        this(0, null,null);
     }
 
-    public Drive(String from, String to)
+    public Drive(int id, String from, String to)
     {
+    	this.id = id;
         this.from = new SimpleStringProperty(from);
         this.to = new SimpleStringProperty(to);
         this.time = new SimpleIntegerProperty(0);
@@ -34,8 +36,9 @@ public class Drive {
         this.listOfIntermediateDrive = null;
     }
 
-    public Drive(String from, String to, int time, int distance, int price)
+    public Drive(int id, String from, String to, int time, int distance, int price)
     {
+    	this.id = id;
         this.from = new SimpleStringProperty(from);
         this.to = new SimpleStringProperty(to);
         this.time = new SimpleIntegerProperty(time);
@@ -44,8 +47,9 @@ public class Drive {
         this.listOfIntermediateDrive = null;
     }
 
-    public Drive(String from, String to, int time, int distance, int price, List<IntermediateDrive> listOfIntermediateDrive)
+    public Drive(int id, String from, String to, int time, int distance, int price, List<IntermediateDrive> listOfIntermediateDrive)
     {
+    	this.id = id;
         this.from = new SimpleStringProperty(from);
         this.to = new SimpleStringProperty(to);
         this.time = new SimpleIntegerProperty(time);
@@ -117,5 +121,9 @@ public class Drive {
     public List<IntermediateDrive> getListOfIntermediateDrive() {
         return listOfIntermediateDrive;
     }
+
+	public int getId() {
+		return id;
+	}
 
 }

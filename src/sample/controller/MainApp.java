@@ -2,6 +2,7 @@ package sample.controller;
 
 import java.io.IOException;
 
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,17 +22,11 @@ public class MainApp extends Application {
     private BorderPane rootLayout;
     private TabPane tabbedLayout;
     private ObservableList<Drive> driveData = FXCollections.observableArrayList();
-
+    private DataBaseHandler dbh;
     public MainApp()
     {
-        driveData.add(new Drive("Warszawa", "Kraków"));
-        driveData.add(new Drive("Warszawa", "Chełm"));
-        driveData.add(new Drive("Warszawa", "Gdańsk"));
-        driveData.add(new Drive("Kraków", "Warszawa"));
-        driveData.add(new Drive("Chełm", "Warszawa"));
-        driveData.add(new Drive("Gdańsk", "Warszawa"));
-        driveData.add(new Drive("Warszawa", "Radom"));
-        driveData.add(new Drive("Radom", "Warszawa"));
+    	dbh = new DataBaseHandler();
+        driveData.addAll(dbh.getAllDrives());
     }
 
     @Override
