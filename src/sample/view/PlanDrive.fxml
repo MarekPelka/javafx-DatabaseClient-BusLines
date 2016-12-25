@@ -5,11 +5,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.PlanDriveController">
+<AnchorPane prefHeight="300.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.PlanDriveController">
    <children>
-      <SplitPane dividerPositions="0.25, 0.75" layoutX="200.0" layoutY="70.0" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.185, 0.6816666666666666" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="background">
                <children>
                   <TableView fx:id="tableDrive" focusTraversable="false" layoutX="-26.0" layoutY="84.0" onMousePressed="#frezzeSelection" onMouseReleased="#frezzeSelection" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                     <columns>
@@ -23,7 +23,7 @@
                   <Label layoutX="14.0" layoutY="6.0" text="Existing drives:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="background">
                <children>
                   <Label layoutX="14.0" layoutY="14.0" text="Create drive:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                   <SplitPane dividerPositions="0.5" layoutY="31.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
@@ -40,14 +40,14 @@
                   </SplitPane>
                   <Label layoutX="4.0" layoutY="29.0" text="Drive:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="30.0" />
                   <Label layoutX="147.0" layoutY="30.0" text="Possible stops:" AnchorPane.topAnchor="30.0" />
-                  <Button layoutX="199.0" layoutY="259.0" mnemonicParsing="false" text="Add Stop" AnchorPane.bottomAnchor="5.0" />
-                  <Button layoutX="39.0" layoutY="256.0" mnemonicParsing="false" text="Remove Stop" AnchorPane.bottomAnchor="5.0" />
+                  <Button layoutX="191.0" layoutY="261.0" mnemonicParsing="false" text="Add Stop" AnchorPane.bottomAnchor="5.0" />
+                  <Button layoutX="14.0" layoutY="261.0" mnemonicParsing="false" text="Remove Stop" AnchorPane.bottomAnchor="5.0" />
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="background">
                <children>
                   <Label layoutY="6.0" text="Deatils:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-                  <ToolBar layoutX="-5.0" layoutY="249.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                  <ToolBar layoutX="-5.0" layoutY="249.0" styleClass="background" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                     <items>
                       <Button mnemonicParsing="false" onAction="#handleOk" text="Add" />
                         <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
