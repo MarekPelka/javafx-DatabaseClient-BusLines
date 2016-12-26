@@ -32,6 +32,7 @@ public class MainApp extends Application {
     {
     	dbh = new DataBaseHandler();
         driveData.addAll(dbh.getAllDrives());
+        busData.addAll(dbh.getAllBuses());
     }
 
     @Override

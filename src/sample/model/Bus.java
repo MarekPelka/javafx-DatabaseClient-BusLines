@@ -9,39 +9,42 @@ import java.sql.Date;
  */
 public class Bus {
 
-    private final int busId;
-    private final IntegerProperty category;
+    private final int busId;  
     private final int busModelId;
     private final Date dateOfBuy;
     private final StringProperty licensePlate;
     private final StringProperty sereialNumber;
     private final IntegerProperty seats;
     private final IntegerProperty mileage;
-
+    private final FloatProperty classRate;
+    private final StringProperty busModelName;
+    
     public Bus(){this(null);}
 
     public Bus(String licensePlate){
         this.licensePlate = new SimpleStringProperty(licensePlate);
-
-        this.busModelId = 0;
-        this.dateOfBuy = new Date(0);
+        this.busModelId = -1;
         this.busId = -1;
-        this.category = new SimpleIntegerProperty(0);
+        this.dateOfBuy = new Date(0); 
         this.sereialNumber = new SimpleStringProperty("null");
         this.seats = new SimpleIntegerProperty(0);
         this.mileage = new SimpleIntegerProperty(0);
+        this.classRate = new SimpleFloatProperty(0f);
+        this.busModelName = new SimpleStringProperty("null");
     }
 
-    public Bus(int id, int category, int busModelId, Date date, String licensePlate, String sereialNumber, int seats, int mileage){
+    public Bus(int id, int busModelId, Date date, String licensePlate, String serialNumber, int seats,
+    		int mileage, float classRate,String modelName){
 
         this.busId = id;
-        this.category = new SimpleIntegerProperty(category);
         this.busModelId = busModelId;
         this.dateOfBuy = new Date(date.getTime());
         this.licensePlate = new SimpleStringProperty(licensePlate);
-        this.sereialNumber = new SimpleStringProperty(sereialNumber);
+        this.sereialNumber = new SimpleStringProperty(serialNumber);
         this.seats = new SimpleIntegerProperty(seats);
         this.mileage = new SimpleIntegerProperty(mileage);
+        this.classRate = new SimpleFloatProperty(classRate);
+        this.busModelName = new SimpleStringProperty(modelName);
     }
 
     public int getMileage() {
@@ -60,16 +63,16 @@ public class Bus {
         return busId;
     }
 
-    public int getCategory() {
-        return category.get();
+    public float getClassRate() {
+        return classRate.get();
     }
 
-    public IntegerProperty categoryProperty() {
-        return category;
+    public FloatProperty classRateProperty() {
+        return classRate;
     }
 
-    public void setCategory(int category) {
-        this.category.set(category);
+    public void setClassRate(int category) {
+        this.classRate.set(category);
     }
 
     public int getBusModelId() {
@@ -115,4 +118,12 @@ public class Bus {
     public void setSeats(int seats) {
         this.seats.set(seats);
     }
+
+	public StringProperty busModelNameProperty() {
+		return busModelName;
+	}
+	
+	public String getModelName() {
+		return busModelName.get();
+	}
 }

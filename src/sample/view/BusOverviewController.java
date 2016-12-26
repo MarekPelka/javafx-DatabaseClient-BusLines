@@ -49,8 +49,8 @@ public class BusOverviewController {
     {
         if(bus != null) {
             labelPlate.setText(bus.getLicensePlate());
-            labelCategory.setText(String.valueOf(bus.getCategory()));
-            LabelModel.setText(String.valueOf(bus.getBusModelId()));
+            labelCategory.setText(String.valueOf(bus.getClassRate()));
+            LabelModel.setText(String.valueOf(bus.getModelName()));
             labelSeats.setText(String.valueOf(bus.getSeats()));
             labelMileage.setText(String.valueOf(bus.getMileage()));
             labelSerialNumber.setText(String.valueOf(bus.getSereialNumber()));
