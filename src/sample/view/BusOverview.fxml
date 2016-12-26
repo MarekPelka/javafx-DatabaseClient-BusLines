@@ -31,8 +31,8 @@
                         <Label text="Milege" GridPane.rowIndex="4" />
                         <Label text="Serial Number" GridPane.rowIndex="5" />
                         <Label fx:id="labelPlate" text="Label" GridPane.columnIndex="1" />
-                        <Label fx:id="labelSereialNumber" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Label fx:id="labelMilage" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="labelSerialNumber" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label fx:id="labelMileage" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label fx:id="labelSeats" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label fx:id="LabelModel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label fx:id="labelCategory" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
