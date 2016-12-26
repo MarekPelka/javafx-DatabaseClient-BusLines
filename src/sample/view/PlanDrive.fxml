@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -41,9 +43,9 @@
                            </children></AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <TableView fx:id="columnPossibleStops" layoutX="2.0" layoutY="-10.0" prefHeight="159.0" prefWidth="146.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="tablePossibleStops" layoutX="2.0" layoutY="-10.0" prefHeight="159.0" prefWidth="146.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <columns>
-                                    <TableColumn fx:id="tablePossibleStops" prefWidth="75.0" text="Possible Stops" />
+                                    <TableColumn fx:id="columnPossibleStops" prefWidth="75.0" text="Possible Stops" />
                                  </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -54,7 +56,8 @@
                   </SplitPane>
                   <Button layoutX="191.0" layoutY="261.0" mnemonicParsing="false" onAction="#addStop" text="Add Stop" AnchorPane.bottomAnchor="5.0" />
                   <Button layoutX="14.0" layoutY="261.0" mnemonicParsing="false" text="Remove Stop" AnchorPane.bottomAnchor="5.0" />
-                  <Label fx:id="driveStart" layoutX="273.0" layoutY="5.0" text="Label" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                  <Label layoutX="154.0" layoutY="4.0" text="Drive From: " />
+                  <Text fx:id="driveStart" layoutX="262.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="background">

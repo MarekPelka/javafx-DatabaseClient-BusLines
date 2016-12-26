@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sample.controller.MainApp;
 import sample.model.Drive;
@@ -34,7 +36,7 @@ public class PlanDriveController {
     private TableColumn<IntermediateDrive, String> columnPossibleStops;
 
     @FXML
-    private Label driveStart;
+    private Text driveStart;
     @FXML
     private Label labelTime;
     @FXML
@@ -78,24 +80,14 @@ public class PlanDriveController {
             this.labelDistance.setText(String.valueOf(drive.getDistance()));
             this.labelPrice.setText(String.valueOf(drive.getPrice()));
 
-            this.driveStart.setText("Drive From:  <font color=\"red\">" + drive.getFrom().replace(" ", "") + "</font>" );
+            this.driveStart.setText(drive.getFrom().replace(" ", ""));
+            this.driveStart.setFill(Color.DARKORANGE);
 
             tableStops.setItems(FXCollections.observableArrayList (drive.getListOfIntermediateDrive()));
             columnStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
 
             tablePossibleStops.setItems(mainApp.getIntermediateDrivesFromData(tableStops.getItems().get(tableStops.getItems().size() - 1).getCityTo()));
             columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
-
-//            List<String> intermediateNamesStops = new ArrayList<>();
-//            intermediateNamesStops.add(drive.getFrom());
-//            drive.getListOfIntermediateDrive().forEach(d -> intermediateNamesStops.add(d.getCityTo()));
-//            ObservableList<String> itemsStops = FXCollections.observableArrayList (intermediateNamesStops);
-//            stopsOnRoute.setItems(itemsStops);
-//
-//            List<String> intermediateNames = new ArrayList<>();
-//            mainApp.getIntermediateDrivesFromData(itemsStops.get(itemsStops.size() - 1)).forEach(d -> intermediateNames.add(d.getCityFrom()));
-//            ObservableList<String> items = FXCollections.observableArrayList (intermediateNames);
-//            possibleStops.setItems(items);
         }
         else
         {
@@ -103,10 +95,9 @@ public class PlanDriveController {
             this.labelDistance.setText("0");
             this.labelPrice.setText("0");
             this.driveStart.setText("");
-//            List<String> intermediateNames = new ArrayList<>();
-//            mainApp.getIntermediateDrivesData().forEach(d -> intermediateNames.add(d.getCityFrom()));
-//            ObservableList<String> items = FXCollections.observableArrayList (intermediateNames);
-//            possibleStops.setItems(items);
+
+            tablePossibleStops.setItems(mainApp.getIntermediateDrivesData());
+            columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityFromProperty());
         }
     }
 
