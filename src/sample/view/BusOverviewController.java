@@ -1,17 +1,11 @@
 package sample.view;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import sample.controller.MainApp;
 import sample.model.Bus;
-import sample.model.Drive;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Marek on 2016-12-26.
@@ -32,12 +26,13 @@ public class BusOverviewController {
     @FXML
     private Label labelSeats;
     @FXML
-    private Label labelMilage;
+    private Label labelMileage;
     @FXML
-    private Label labelSereialNumber;
+    private Label labelSerialNumber;
 
     private MainApp mainApp;
 
+    @FXML
     private void initialize() {
         columnBusPlate.setCellValueFactory(cellData -> cellData.getValue().licensePlateProperty());
         showBusDetails(null);
@@ -57,8 +52,8 @@ public class BusOverviewController {
             labelCategory.setText(String.valueOf(bus.getCategory()));
             LabelModel.setText(String.valueOf(bus.getBusModelId()));
             labelSeats.setText(String.valueOf(bus.getSeats()));
-            labelMilage.setText(String.valueOf(bus.getMileage()));
-            labelSereialNumber.setText(String.valueOf(bus.getSereialNumber()));
+            labelMileage.setText(String.valueOf(bus.getMileage()));
+            labelSerialNumber.setText(String.valueOf(bus.getSereialNumber()));
 
         }else
         {
@@ -66,9 +61,8 @@ public class BusOverviewController {
             labelCategory.setText("");
             LabelModel.setText("");
             labelSeats.setText("");
-            labelMilage.setText("");
-            labelSereialNumber.setText("");
+            labelMileage.setText("");
+            labelSerialNumber.setText("");
         }
-
     }
 }

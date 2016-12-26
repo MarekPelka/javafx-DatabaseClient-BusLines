@@ -81,9 +81,9 @@ public class MainApp extends Application {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/DriveOverview.fxml"));
-            AnchorPane personOverview = (AnchorPane) loader.load();
+            AnchorPane driveOverview = (AnchorPane) loader.load();
 
-            tabbedLayout.getTabs().get(0).setContent(personOverview);
+            tabbedLayout.getTabs().get(0).setContent(driveOverview);
 
             DriveOverviewController controller = loader.getController();
             controller.setMainApp(this);
