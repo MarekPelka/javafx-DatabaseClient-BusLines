@@ -69,7 +69,7 @@ public class DriveOverviewController {
             List<String> intermediateNames = new ArrayList<>();
             intermediateNames.add(drive.getFrom());
             drive.getListOfIntermediateDrive().forEach(d -> intermediateNames.add(d.getCityTo()));
-            ObservableList<String> items =FXCollections.observableArrayList (intermediateNames);
+            ObservableList<String> items = FXCollections.observableArrayList (intermediateNames);
             listIntermediateDrive.setItems(items);
         }else
         {

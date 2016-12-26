@@ -12,8 +12,10 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import sample.model.Bus;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
+import sample.view.BusOverviewController;
 import sample.view.DriveOverviewController;
 import sample.view.PlanDriveController;
 
@@ -23,6 +25,7 @@ public class MainApp extends Application {
     private BorderPane rootLayout;
     private TabPane tabbedLayout;
     private ObservableList<Drive> driveData = FXCollections.observableArrayList();
+    private ObservableList<Bus> busData = FXCollections.observableArrayList();
     //private ObservableList<IntermediateDrive> intermediateDrivesData = FXCollections.observableArrayList();
     private DataBaseHandler dbh;
     public MainApp()
@@ -95,7 +98,8 @@ public class MainApp extends Application {
             AnchorPane busOverview = (AnchorPane) loader.load();
 
             tabbedLayout.getTabs().get(1).setContent(busOverview);
-
+            BusOverviewController controller = loader.getController();
+            controller.setMainApp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,4 +153,7 @@ public class MainApp extends Application {
         return intermediateDrivesFromData;
     }
 
+    public ObservableList<Bus> getBusData() {
+        return busData;
+    }
 }
