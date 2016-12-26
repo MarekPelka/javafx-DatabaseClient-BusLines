@@ -14,9 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import consts.BusConsts;
 import consts.DriveConsts;
 import consts.IntermediateDriveConsts;
-import javafx.collections.ObservableList;
+import sample.model.Bus;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
 
@@ -135,7 +136,44 @@ public class DataBaseHandler {
 		}
 		catch (SQLException ex)
 		{
-			System.err.println("Selecting drives failed.\n" + ex.getSQLState());
+			System.err.println("Selecting drives with intermediate drives failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return result;
+	}
+	
+	public List<Bus> getAllBuses()
+	{
+		String query = "select * from BUSES JOIN BUS_MODELS ON BUSES.BUS_MODEL_ID = BUS_MODELS.BUS_MODEL_ID";
+		List<Bus> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			
+			while (resultSet.next())
+			{
+				Bus bus = new Bus(resultSet.getInt(BusConsts.ID),
+						resultSet.getInt(BusConsts.MODEL_ID),
+						resultSet.getDate(BusConsts.BOUGHT_TIME),
+						resultSet.getString(BusConsts.LICENSE_PLATE),
+						resultSet.getString(BusConsts.SERIAL_NUMBER),
+						resultSet.getInt(BusConsts.SEATS_NUM),
+						resultSet.getInt(BusConsts.MILEAGE),
+						resultSet.getFloat(BusConsts.CLASS_RATE),
+						resultSet.getString(BusConsts.BUS_MODEL_NAME));
+				result.add(bus);
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting all buses failed.\n" + ex.getSQLState());
 		}
 		finally
 		{
@@ -170,7 +208,7 @@ public class DataBaseHandler {
 		}
 		catch (SQLException ex)
 		{
-			System.err.println("Selecting drives failed.\n" + ex.getSQLState());
+			System.err.println("Selecting intermediate drives of one drive failed.\n" + ex.getSQLState());
 		}
 		finally
 		{
@@ -203,7 +241,7 @@ public class DataBaseHandler {
 		}
 		catch (SQLException ex)
 		{
-			System.err.println("Selecting drives failed.\n" + ex.getSQLState());
+			System.err.println("Selecting intermediate drvies data failed.\n" + ex.getSQLState());
 		}
 		finally
 		{
@@ -236,7 +274,7 @@ public class DataBaseHandler {
 		}
 		catch (SQLException ex)
 		{
-			System.err.println("Selecting drives failed.\n" + ex.getSQLState());
+			System.err.println("Selecting intermediate drvies from data failed.\n" + ex.getSQLState());
 		}
 		finally
 		{
