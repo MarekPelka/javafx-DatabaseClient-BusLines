@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import sample.model.Drive;
+import sample.model.IntermediateDrive;
 import sample.view.DriveOverviewController;
 import sample.view.PlanDriveController;
 
@@ -22,6 +23,7 @@ public class MainApp extends Application {
     private BorderPane rootLayout;
     private TabPane tabbedLayout;
     private ObservableList<Drive> driveData = FXCollections.observableArrayList();
+    //private ObservableList<IntermediateDrive> intermediateDrivesData = FXCollections.observableArrayList();
     private DataBaseHandler dbh;
     public MainApp()
     {
@@ -70,7 +72,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * Shows the person overview inside the root layout.
+     * Shows the drive overview inside the root layout.
      */
     public void showDriveOverview() {
         try {
@@ -134,4 +136,17 @@ public class MainApp extends Application {
     public ObservableList<Drive> getDriveData() {
         return driveData;
     }
+
+    public ObservableList<IntermediateDrive> getIntermediateDrivesData() {
+        ObservableList<IntermediateDrive> intermediateDrivesData = FXCollections.observableArrayList();
+        intermediateDrivesData.addAll(dbh.getIntermediateDrivesData());
+        return intermediateDrivesData;
+    }
+
+    public ObservableList<IntermediateDrive> getIntermediateDrivesFromData(String cityFrom) {
+        ObservableList<IntermediateDrive> intermediateDrivesFromData = FXCollections.observableArrayList();
+        intermediateDrivesFromData.addAll(dbh.getIntermediateDrivesFromData(cityFrom));
+        return intermediateDrivesFromData;
+    }
+
 }

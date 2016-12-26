@@ -16,6 +16,7 @@ import java.util.Properties;
 
 import consts.DriveConsts;
 import consts.IntermediateDriveConsts;
+import javafx.collections.ObservableList;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
 
@@ -156,6 +157,72 @@ public class DataBaseHandler {
 			Statement statement = c.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
 			
+			while (resultSet.next())
+			{
+				IntermediateDrive iDrive = new IntermediateDrive(resultSet.getInt(IntermediateDriveConsts.ID),
+						resultSet.getString(IntermediateDriveConsts.CITY_FROM),
+						resultSet.getString(IntermediateDriveConsts.CITY_TO),
+						resultSet.getInt(IntermediateDriveConsts.TIME),
+						resultSet.getInt(IntermediateDriveConsts.DISTANCE),
+						resultSet.getFloat(IntermediateDriveConsts.PRICE));
+				result.add(iDrive);
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting drives failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return result;
+	}
+
+	public List<IntermediateDrive> getIntermediateDrivesData() {
+		String query = "select * from INTERMEDIATE_DRIVES";
+		List<IntermediateDrive> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next())
+			{
+				IntermediateDrive iDrive = new IntermediateDrive(resultSet.getInt(IntermediateDriveConsts.ID),
+						resultSet.getString(IntermediateDriveConsts.CITY_FROM),
+						resultSet.getString(IntermediateDriveConsts.CITY_TO),
+						resultSet.getInt(IntermediateDriveConsts.TIME),
+						resultSet.getInt(IntermediateDriveConsts.DISTANCE),
+						resultSet.getFloat(IntermediateDriveConsts.PRICE));
+				result.add(iDrive);
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting drives failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return result;
+	}
+
+	public List<IntermediateDrive> getIntermediateDrivesFromData(String cityFrom) {
+		String query = "select * from INTERMEDIATE_DRIVES where CITY_FROM = '" + cityFrom + "'";
+		List<IntermediateDrive> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
 			while (resultSet.next())
 			{
 				IntermediateDrive iDrive = new IntermediateDrive(resultSet.getInt(IntermediateDriveConsts.ID),

@@ -85,6 +85,7 @@ public class DriveOverviewController {
     @FXML
     private void handleDeleteDrive() {
         int selectedIndex = tableDrive.getSelectionModel().getSelectedIndex();
+        //tableDrive.getItems().get(selectedIndex);
         if (selectedIndex >= 0) {
             tableDrive.getItems().remove(selectedIndex);
         } else {

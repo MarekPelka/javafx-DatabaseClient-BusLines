@@ -1,10 +1,16 @@
 package sample.view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import sample.controller.MainApp;
 import sample.model.Drive;
+import sample.model.IntermediateDrive;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Marek on 2016-12-25.
@@ -19,10 +25,16 @@ public class PlanDriveController {
     private TableColumn<Drive, String> columnTo;
 
     @FXML
-    private ListView stopsOnRoute;
+    private TableView<IntermediateDrive> tableStops;
     @FXML
-    private ListView possibleStops;
+    private TableColumn<IntermediateDrive, String> columnStops;
+    @FXML
+    private TableView<IntermediateDrive> tablePossibleStops;
+    @FXML
+    private TableColumn<IntermediateDrive, String> columnPossibleStops;
 
+    @FXML
+    private Label driveStart;
     @FXML
     private Label labelTime;
     @FXML
@@ -34,14 +46,13 @@ public class PlanDriveController {
     private Stage dialogStage;
     private Drive drive;
     private boolean okClicked = false;
+    private List<IntermediateDrive> driveInProgres;
 
     @FXML
     private void initialize() {
 
         columnFrom.setCellValueFactory(cellData -> cellData.getValue().fromProperty());
         columnTo.setCellValueFactory(cellData -> cellData.getValue().toProperty());
-
-
     }
 
     public void setDialogStage(Stage dialogStage) {
@@ -52,6 +63,7 @@ public class PlanDriveController {
         this.mainApp = mainApp;
         tableDrive.setItems(mainApp.getDriveData());
 
+
     }
 
     public void setDrive(Drive drive)
@@ -59,10 +71,43 @@ public class PlanDriveController {
         this.drive = drive;
         tableDrive.getSelectionModel().select(drive);
 
-        //this.stopsOnRoute =
-        this.labelTime.setText(String.valueOf(drive.getTime()));
-        this.labelDistance.setText(String.valueOf(drive.getDistance()));
-        this.labelPrice.setText(String.valueOf(drive.getPrice()));
+
+        if(drive.getListOfIntermediateDrive() != null)
+        {
+            this.labelTime.setText(String.valueOf(drive.getTime()));
+            this.labelDistance.setText(String.valueOf(drive.getDistance()));
+            this.labelPrice.setText(String.valueOf(drive.getPrice()));
+
+            this.driveStart.setText("Drive From:  <font color=\"red\">" + drive.getFrom().replace(" ", "") + "</font>" );
+
+            tableStops.setItems(FXCollections.observableArrayList (drive.getListOfIntermediateDrive()));
+            columnStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+
+            tablePossibleStops.setItems(mainApp.getIntermediateDrivesFromData(tableStops.getItems().get(tableStops.getItems().size() - 1).getCityTo()));
+            columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+
+//            List<String> intermediateNamesStops = new ArrayList<>();
+//            intermediateNamesStops.add(drive.getFrom());
+//            drive.getListOfIntermediateDrive().forEach(d -> intermediateNamesStops.add(d.getCityTo()));
+//            ObservableList<String> itemsStops = FXCollections.observableArrayList (intermediateNamesStops);
+//            stopsOnRoute.setItems(itemsStops);
+//
+//            List<String> intermediateNames = new ArrayList<>();
+//            mainApp.getIntermediateDrivesFromData(itemsStops.get(itemsStops.size() - 1)).forEach(d -> intermediateNames.add(d.getCityFrom()));
+//            ObservableList<String> items = FXCollections.observableArrayList (intermediateNames);
+//            possibleStops.setItems(items);
+        }
+        else
+        {
+            this.labelTime.setText("0");
+            this.labelDistance.setText("0");
+            this.labelPrice.setText("0");
+            this.driveStart.setText("");
+//            List<String> intermediateNames = new ArrayList<>();
+//            mainApp.getIntermediateDrivesData().forEach(d -> intermediateNames.add(d.getCityFrom()));
+//            ObservableList<String> items = FXCollections.observableArrayList (intermediateNames);
+//            possibleStops.setItems(items);
+        }
     }
 
     public boolean isOkClicked() {
@@ -83,10 +128,24 @@ public class PlanDriveController {
         }
     }
 
+    @FXML
+    private void addStop() {
+
+//        driveInProgres.add((IntermediateDrive) possibleStops.getSelectionModel().getSelectedItem());
+//        List<String> intermediateStopsNames = new ArrayList<>();
+//        driveInProgres.forEach(d -> intermediateStopsNames.add(d.getCityFrom()));
+//        ObservableList<String> items = FXCollections.observableArrayList (intermediateStopsNames);
+//        stopsOnRoute.setItems(items);
+//        List<String> intermediateNames = new ArrayList<>();
+//        mainApp.getIntermediateDrivesFromData(driveInProgres.get(driveInProgres.size() - 1).getCityFrom());
+//        items = FXCollections.observableArrayList (intermediateNames);
+//        possibleStops.setItems(items);
+    }
+
     private boolean isInputValid() {
         String errorMessage = "";
 
-        if (stopsOnRoute.getItems().isEmpty()) {
+        if (tableStops.getItems().isEmpty()) {
             errorMessage += "No valid stops!\n";
         }
 
@@ -122,22 +181,6 @@ public class PlanDriveController {
 
     public void setLabelPrice(Label labelPrice) {
         this.labelPrice = labelPrice;
-    }
-
-    public ListView getStopsOnRoute() {
-        return stopsOnRoute;
-    }
-
-    public void setStopsOnRoute(ListView stopsOnRoute) {
-        this.stopsOnRoute = stopsOnRoute;
-    }
-
-    public ListView getPossibleStops() {
-        return possibleStops;
-    }
-
-    public void setPossibleStops(ListView possibleStops) {
-        this.possibleStops = possibleStops;
     }
 
     public Label getLabelTime() {
