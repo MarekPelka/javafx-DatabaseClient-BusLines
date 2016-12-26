@@ -42,7 +42,8 @@ public class DriveOverviewController {
 
     public DriveOverviewController() {}
 
-    public void initialize()
+    @FXML
+    private void initialize()
     {
         columnFrom.setCellValueFactory(cellData -> cellData.getValue().fromProperty());
         columnTo.setCellValueFactory(cellData -> cellData.getValue().toProperty());
