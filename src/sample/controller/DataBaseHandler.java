@@ -17,9 +17,11 @@ import java.util.Properties;
 import consts.BusConsts;
 import consts.DriveConsts;
 import consts.IntermediateDriveConsts;
+import consts.PersonConsts;
 import sample.model.Bus;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
+import sample.model.Person;
 
 public class DataBaseHandler {
 	/** Packet address for JDBC driver */
@@ -271,6 +273,70 @@ public class DataBaseHandler {
 						resultSet.getInt(IntermediateDriveConsts.DISTANCE),
 						resultSet.getFloat(IntermediateDriveConsts.PRICE));
 				result.add(iDrive);
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting intermediate drvies from data failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return result;
+	}
+	
+	public List<Person> getFreeDrivers() {
+		String query = "select * from DRIVERS d,PERSONS p  where d.DRIVER_ID not in " 
+				+ "(select gp.DRIVER_ID from GRAPHIC_POSITIONS gp where gp.DRIVER_ID is not null and "
+				+ "(select SYSDATE from DUAL) between gp.TIME_FROM and gp.TIME_TO) AND d.PERSON_ID=p.PERSON_ID";
+		List<Person> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next())
+			{
+				Person person = new Person(resultSet.getInt(PersonConsts.ID),
+						resultSet.getString(PersonConsts.NAME),
+						resultSet.getString(PersonConsts.SURNAME));
+				result.add(person);
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting intermediate drvies from data failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return result;
+	}
+	
+	public List<Person> getFreeHostess() {
+		String query = "select * from HOSTESS h,PERSONS p  where h.HOSTESS_ID not in " 
+				+ "(select gp.HOSTESS_ID from GRAPHIC_POSITIONS gp where gp.HOSTESS_ID is not null and "
+				+ "(select SYSDATE from DUAL) between gp.TIME_FROM and gp.TIME_TO) AND h.PERSON_ID=p.PERSON_ID";
+		List<Person> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next())
+			{
+				Person person = new Person(resultSet.getInt(PersonConsts.ID),
+						resultSet.getString(PersonConsts.NAME),
+						resultSet.getString(PersonConsts.SURNAME));
+				result.add(person);
 			}
 		}
 		catch (SQLException ex)
