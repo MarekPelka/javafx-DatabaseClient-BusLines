@@ -22,7 +22,7 @@ import sample.model.Drive;
 import sample.model.IntermediateDrive;
 
 public class DataBaseHandler {
-	/** Packet adsress for JDBC driver */
+	/** Packet address for JDBC driver */
 	private static String driver;
 	/** URL data base address */
 	private static String url;
@@ -65,7 +65,7 @@ public class DataBaseHandler {
 			String defaultData = "#Driver for JDBC\n" + "driver=oracle.jdbc.driver.OracleDriver\n"
 					+ "#Data Base adress (default on your localhost on 80 port)\n"
 					+ "url=jdbc:oracle:thin:@//localhost:1522/orcl\n" + "#login on your database\n"
-					+ "login=grzegorz\n" + "#your password on database\n" + "password=##TAJNE##";
+					+ "login=xxx\n" + "#your password on database\n" + "password=xxx";
 			FileWriter fileWritter = new FileWriter(file.getName(), true);
 			BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
 			bufferWritter.write(defaultData);
@@ -110,11 +110,11 @@ public class DataBaseHandler {
 	
 	public List<Drive> getAllDrives()
 	{
-		String query = "select d.DRIVE_ID,d.CITY_FROM,d.CITY_TO, sum(idr.DISTANCE) AS DISTANCE_SUM,"
-				+ " sum(idr.PRICE) AS PRICE_SUM, sum(idr.TIME) AS TIME_SUM"
+		String query = "select d.DRIVE_ID,d.CITY_FROM,d.CITY_TO, sum(idr.DISTANCE) as DISTANCE_SUM,"
+				+ " sum(idr.PRICE) as PRICE_SUM, sum(idr.TIME) as TIME_SUM"
 				+ " from DRIVES d,INTERMEDIATE_DRIVES idr"
-				+ " where  idr.INTERMEDIATE_DRIVE_ID IN (SELECT INTERMEDIATE_DRIVE_ID "
-				+ " FROM DRIVE_CONTENTS WHERE DRIVE_ID=d.DRIVE_ID) group by d.DRIVE_ID,d.CITY_FROM,d.CITY_TO";
+				+ " where  idr.INTERMEDIATE_DRIVE_ID in (SELECT INTERMEDIATE_DRIVE_ID "
+				+ " from DRIVE_CONTENTS where DRIVE_ID=d.DRIVE_ID) group by d.DRIVE_ID,d.CITY_FROM,d.CITY_TO";
 		List<Drive> result = new ArrayList<>();
 		Connection c = null;
 		try
@@ -136,7 +136,7 @@ public class DataBaseHandler {
 		}
 		catch (SQLException ex)
 		{
-			System.err.println("Selecting drives with intermediate drives failed.\n" + ex.getSQLState());
+			System.err.println("Selecting drives with intermediate drives data failed.\n" + ex.getSQLState());
 		}
 		finally
 		{
@@ -148,7 +148,7 @@ public class DataBaseHandler {
 	
 	public List<Bus> getAllBuses()
 	{
-		String query = "select * from BUSES JOIN BUS_MODELS ON BUSES.BUS_MODEL_ID = BUS_MODELS.BUS_MODEL_ID";
+		String query = "select * from BUSES join BUS_MODELS on BUSES.BUS_MODEL_ID = BUS_MODELS.BUS_MODEL_ID";
 		List<Bus> result = new ArrayList<>();
 		Connection c = null;
 		try
@@ -185,7 +185,8 @@ public class DataBaseHandler {
 	
 	private List<IntermediateDrive> getAllIntermediateDrives(int id)
 	{
-		String query = "select * from INTERMEDIATE_DRIVES WHERE INTERMEDIATE_DRIVE_ID IN "+"(select INTERMEDIATE_DRIVE_ID " 
+		String query = "select * from INTERMEDIATE_DRIVES where INTERMEDIATE_DRIVE_ID in "
+						+"(select INTERMEDIATE_DRIVE_ID " 
 						+"from DRIVE_CONTENTS where DRIVE_ID="+id + ")";	
 		List<IntermediateDrive> result = new ArrayList<>();
 		Connection c = null;
