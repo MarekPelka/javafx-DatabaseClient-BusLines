@@ -42,9 +42,9 @@ public class MainApp extends Application {
     }
 
     private enum tabs{
-        CREATE_COURSE(0),
-        DRIVE_OVERVIEW(1),
-        BUS_OVERVIEW(2),
+        CREATE_COURSE(2),
+        DRIVE_OVERVIEW(0),
+        BUS_OVERVIEW(1),
         CHECKUP(3);
         public int number;
         tabs(int i){number = i;};
@@ -69,6 +69,7 @@ public class MainApp extends Application {
         showCourseCreation();
         showDriveOverview();
         showBusOverview();
+        showBusesCheckup();
     }
 
     /**
@@ -143,15 +144,15 @@ public class MainApp extends Application {
     }
 
     public void showBusesCheckup() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusOverview.fxml"));
-//            AnchorPane busOverview = (AnchorPane) loader.load();
-//
-//            tabbedLayout.getTabs().get(3).setContent(busOverview);
-//
-//        } catch (IOException e) {
-//            exceptionDialog(e);
-//        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusCheckup.fxml"));
+            AnchorPane busOverview = (AnchorPane) loader.load();
+
+            tabbedLayout.getTabs().get(tabs.CHECKUP.number).setContent(busOverview);
+
+        } catch (IOException e) {
+            exceptionDialog(e);
+        }
     }
 
     public boolean showDriveEditDialog(Drive drive) {

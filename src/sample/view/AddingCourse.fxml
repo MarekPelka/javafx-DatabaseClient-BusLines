@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.AddingCourseController">
    <children>
       <SplitPane dividerPositions="0.7" layoutX="200.0" layoutY="70.0" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -29,7 +29,7 @@
                         <Label text="Date" GridPane.rowIndex="3" />
                         <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <center>
-                              <ChoiceBox prefWidth="150.0" BorderPane.alignment="CENTER" />
+                              <ChoiceBox fx:id="choiceBoxHostess" prefWidth="150.0" BorderPane.alignment="CENTER" />
                            </center>
                            <right>
                               <Button mnemonicParsing="false" text="+" BorderPane.alignment="CENTER" />
@@ -37,7 +37,7 @@
                         </BorderPane>
                         <BorderPane GridPane.columnIndex="1">
                            <center>
-                              <ChoiceBox prefWidth="150.0" BorderPane.alignment="CENTER" />
+                              <ChoiceBox fx:id="choiceBoxDrivers" prefWidth="150.0" BorderPane.alignment="CENTER" />
                            </center>
                            <right>
                               <Button mnemonicParsing="false" text="+" BorderPane.alignment="CENTER" />
@@ -45,7 +45,7 @@
                         </BorderPane>
                         <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <center>
-                              <ChoiceBox prefWidth="150.0" BorderPane.alignment="CENTER" />
+                              <ChoiceBox fx:id="choiceBoxDrive" prefWidth="150.0" BorderPane.alignment="CENTER" />
                            </center>
                            <right>
                               <Button disable="true" mnemonicParsing="false" text="+" visible="false" BorderPane.alignment="CENTER" />
@@ -53,7 +53,7 @@
                         </BorderPane>
                         <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <center>
-                              <ChoiceBox prefWidth="150.0" BorderPane.alignment="CENTER" />
+                              <ChoiceBox fx:id="choiceBoxDate" prefWidth="150.0" BorderPane.alignment="CENTER" />
                            </center>
                            <right>
                               <Button mnemonicParsing="false" text="+" BorderPane.alignment="CENTER" />
@@ -61,14 +61,14 @@
                         </BorderPane>
                      </children>
                   </GridPane>
+                  <Button layoutX="220.0" layoutY="272.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="191.0" text="Ok" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="5.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="background">
                <children>
-                  <Button layoutX="62.0" layoutY="259.0" mnemonicParsing="false" text="Ok" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
-                  <TableView layoutX="-12.0" layoutY="35.0" prefHeight="259.0" prefWidth="176.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="tableWorkers" layoutX="-12.0" layoutY="35.0" prefHeight="299.0" prefWidth="176.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="Workers" />
+                      <TableColumn fx:id="columnWorkers" prefWidth="75.0" text="Workers" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
