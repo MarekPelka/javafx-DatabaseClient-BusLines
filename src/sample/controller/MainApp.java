@@ -40,7 +40,17 @@ public class MainApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
+    private enum tabs{
+        CREATE_COURSE(0),
+        DRIVE_OVERVIEW(1),
+        BUS_OVERVIEW(2),
+        CHECKUP(3);
+        public int number;
+        tabs(int i){number = i;};
+
+
+    }
     
     public MainApp()
     {
@@ -95,7 +105,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/AddingCourse.fxml"));
             AnchorPane courseCreation = (AnchorPane) loader.load();
 
-            tabbedLayout.getTabs().get(0).setContent(courseCreation);
+            tabbedLayout.getTabs().get(tabs.CREATE_COURSE.number).setContent(courseCreation);
 
         } catch (IOException e) {
             exceptionDialog(e);
@@ -110,7 +120,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/DriveOverview.fxml"));
             AnchorPane driveOverview = (AnchorPane) loader.load();
 
-            tabbedLayout.getTabs().get(1).setContent(driveOverview);
+            tabbedLayout.getTabs().get(tabs.DRIVE_OVERVIEW.number).setContent(driveOverview);
 
             DriveOverviewController controller = loader.getController();
             controller.setMainApp(this);
@@ -124,7 +134,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusOverview.fxml"));
             AnchorPane busOverview = (AnchorPane) loader.load();
 
-            tabbedLayout.getTabs().get(2).setContent(busOverview);
+            tabbedLayout.getTabs().get(tabs.BUS_OVERVIEW.number).setContent(busOverview);
             BusOverviewController controller = loader.getController();
             controller.setMainApp(this);
         } catch (IOException e) {
@@ -151,7 +161,7 @@ public class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("/sample/view/PlanDrive.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            tabbedLayout.getTabs().get(0).setContent(page);
+            tabbedLayout.getTabs().get(tabs.DRIVE_OVERVIEW.number).setContent(page);
 
             PlanDriveController controller = loader.getController();
 
