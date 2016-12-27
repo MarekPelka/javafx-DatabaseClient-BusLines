@@ -97,7 +97,7 @@
 .table-view {
     -fx-base: #1d1d1d;
     -fx-control-inner-background: #1d1d1d;
-    -fx-background-color: #1d1d1d;
+    -fx-background-color: rgb(255,128,0);
     -fx-table-cell-border-color: transparent;
     -fx-table-header-border-color: transparent;
     -fx-padding: 5;
