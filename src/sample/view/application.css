@@ -221,6 +221,7 @@
     -fx-background-color: orange;
     -fx-padding: 0.416667em 0.166667em 0.0em 0.0em;
     -fx-background-insets: 0, 0 0 1 0;
+    -fx-focus-color: #1d1d1d;
 }
 
 .tab-pane
@@ -239,6 +240,7 @@
 .tab-pane .tab:selected
 {    
     -fx-background-color: rgb(255,128,0);
+    -fx-focus-color: #1d1d1d;
 }
 
 .tab .tab-label { 
@@ -248,7 +250,17 @@
     -fx-font-weight: bold;
 }
 
+.tab:hover{
+    -fx-background-color:  orange;
+}
+
 .tab:selected .tab-label { 
     -fx-alignment: CENTER;
     -fx-text-fill: #d8d8d8;
+    
+}
+
+
+.split-pane {
+    -fx-background-color: orange;
 }
