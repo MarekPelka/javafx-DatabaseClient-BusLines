@@ -56,6 +56,7 @@ public class MainApp extends Application {
 
         initRootLayout();
         initTabLayout();
+        showCourseCreation();
         showDriveOverview();
         showBusOverview();
     }
@@ -89,6 +90,17 @@ public class MainApp extends Application {
         }
     }
 
+    public void showCourseCreation() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/AddingCourse.fxml"));
+            AnchorPane courseCreation = (AnchorPane) loader.load();
+
+            tabbedLayout.getTabs().get(0).setContent(courseCreation);
+
+        } catch (IOException e) {
+            exceptionDialog(e);
+        }
+    }
     /**
      * Shows the drive overview inside the root layout.
      */
@@ -98,7 +110,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/DriveOverview.fxml"));
             AnchorPane driveOverview = (AnchorPane) loader.load();
 
-            tabbedLayout.getTabs().get(0).setContent(driveOverview);
+            tabbedLayout.getTabs().get(1).setContent(driveOverview);
 
             DriveOverviewController controller = loader.getController();
             controller.setMainApp(this);
@@ -112,12 +124,24 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusOverview.fxml"));
             AnchorPane busOverview = (AnchorPane) loader.load();
 
-            tabbedLayout.getTabs().get(1).setContent(busOverview);
+            tabbedLayout.getTabs().get(2).setContent(busOverview);
             BusOverviewController controller = loader.getController();
             controller.setMainApp(this);
         } catch (IOException e) {
         	exceptionDialog(e);
         }
+    }
+
+    public void showBusesCheckup() {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusOverview.fxml"));
+//            AnchorPane busOverview = (AnchorPane) loader.load();
+//
+//            tabbedLayout.getTabs().get(3).setContent(busOverview);
+//
+//        } catch (IOException e) {
+//            exceptionDialog(e);
+//        }
     }
 
     public boolean showDriveEditDialog(Drive drive) {

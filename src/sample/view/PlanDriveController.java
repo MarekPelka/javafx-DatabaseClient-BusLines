@@ -55,6 +55,8 @@ public class PlanDriveController {
 
         columnFrom.setCellValueFactory(cellData -> cellData.getValue().fromProperty());
         columnTo.setCellValueFactory(cellData -> cellData.getValue().toProperty());
+
+        columnStops.setSortable(false);
     }
 
     public void setDialogStage(Stage dialogStage) {
