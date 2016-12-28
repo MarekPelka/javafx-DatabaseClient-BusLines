@@ -83,7 +83,7 @@ public class BusEditController {
 		bus.setSeats(Integer.valueOf(txtSeats.getText()));
 		LocalDate ld = datePicker.getValue();
 		Calendar c =  Calendar.getInstance();
-		c.set(ld.getYear(), ld.getMonthValue(), ld.getDayOfMonth());
+		c.set(ld.getYear(), ld.getMonthValue()-1, ld.getDayOfMonth());
 		Date date = new Date(c.getTimeInMillis());
 		bus.setDateOfBuy(date);
 		bus.setClassRate(Float.valueOf(txtCategory.getText()));

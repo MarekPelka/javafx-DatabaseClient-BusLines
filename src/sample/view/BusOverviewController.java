@@ -99,4 +99,22 @@ public class BusOverviewController {
             alert.showAndWait();
         }
     }
+    
+    @FXML
+    private void handleDeleteBus() {
+        int selectedIndex = tableBus.getSelectionModel().getSelectedIndex();
+        //tableDrive.getItems().get(selectedIndex);
+        if (selectedIndex >= 0) {
+        	tableBus.getItems().remove(selectedIndex);
+        } else {
+            // Nothing selected.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(mainApp.getPrimaryStage());
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Drive Selected");
+            alert.setContentText("Please select a drive in the table.");
+
+            alert.showAndWait();
+        }
+    }
 }

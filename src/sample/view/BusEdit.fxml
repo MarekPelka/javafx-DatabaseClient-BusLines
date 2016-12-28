@@ -28,7 +28,7 @@
                   <GridPane stylesheets="@application.css" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0">
                      <children>
                         <Label text="License Plate" />
-                        <Label text="Category" GridPane.rowIndex="1" />
+                        <Label text="Class rate" GridPane.rowIndex="1" />
                         <Label text="Model" GridPane.rowIndex="2" />
                         <Label text="Seats Number" GridPane.rowIndex="3" />
                         <Label text="Milege" GridPane.rowIndex="4" />
