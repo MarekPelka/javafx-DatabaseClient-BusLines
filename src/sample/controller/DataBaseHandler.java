@@ -378,4 +378,34 @@ public class DataBaseHandler {
 
 		return result;
 	}
+
+	public List<BusModel> getAllBusModels()
+	{
+		String query = "select * from BUS_MODELS";
+		List<BusModel> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next())
+			{
+				BusModel busModel = new BusModel(resultSet.getInt(BusModelConsts.ID),
+						resultSet.getString(BusModelConsts.MODEL_NAME));
+				result.add(busModel);
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting all bus models failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return result;
+	}
 }

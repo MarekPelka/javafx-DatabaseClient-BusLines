@@ -32,6 +32,7 @@ public class MainApp extends Application {
     private ObservableList<Person> freeDrivers = FXCollections.observableArrayList();
     private ObservableList<Person> freeHostess = FXCollections.observableArrayList();
     private ObservableList<Services> services = FXCollections.observableArrayList();
+    private ObservableList<BusModel> busModelData = FXCollections.observableArrayList();
     private DataBaseHandler dbh;
     
     public static void main(String[] args) {
@@ -55,6 +56,7 @@ public class MainApp extends Application {
         freeDrivers.addAll(dbh.getFreeDrivers());
         freeHostess.addAll(dbh.getFreeHostess());
         services.addAll(dbh.getServices());
+        busModelData.addAll(dbh.getAllBusModels());
     }
 
     @Override
@@ -68,6 +70,7 @@ public class MainApp extends Application {
         showDriveOverview();
         showBusOverview();
         showBusesCheckup();
+
     }
 
     /**
@@ -245,6 +248,10 @@ public class MainApp extends Application {
     {
         tabbedLayout.getSelectionModel().select(tabs.BUS_OVERVIEW.number);
         //showBusDetails(bus);
+    }
+
+    public ObservableList<BusModel> getBusModelData() {
+        return busModelData;
     }
 
     public ObservableList<Services> getService() { return services; }
