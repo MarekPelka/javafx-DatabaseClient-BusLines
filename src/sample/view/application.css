@@ -262,5 +262,9 @@
 
 
 .split-pane {
-    -fx-background-color: rgb(255,128,0);;
+    -fx-background-color: rgb(255,128,0);
+}
+
+.choice-box .label {
+     -fx-text-fill: black; 
 }

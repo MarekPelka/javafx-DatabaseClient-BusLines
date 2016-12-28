@@ -1,6 +1,5 @@
 package sample.controller;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -23,6 +22,8 @@ import javafx.stage.Stage;
 import sample.model.Bus;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
+import sample.model.Person;
+import sample.view.AddingCourseController;
 import sample.view.BusOverviewController;
 import sample.view.DriveOverviewController;
 import sample.view.PlanDriveController;
@@ -34,6 +35,8 @@ public class MainApp extends Application {
     private TabPane tabbedLayout;
     private ObservableList<Drive> driveData = FXCollections.observableArrayList();
     private ObservableList<Bus> busData = FXCollections.observableArrayList();
+    private ObservableList<Person> freeDrivers = FXCollections.observableArrayList();
+    private ObservableList<Person> freeHostess = FXCollections.observableArrayList();
     //private ObservableList<IntermediateDrive> intermediateDrivesData = FXCollections.observableArrayList();
     private DataBaseHandler dbh;
     
@@ -57,6 +60,8 @@ public class MainApp extends Application {
     	dbh = new DataBaseHandler();
         driveData.addAll(dbh.getAllDrives());
         busData.addAll(dbh.getAllBuses());
+        freeDrivers.addAll(dbh.getFreeDrivers());
+        freeHostess.addAll(dbh.getFreeHostess());
     }
 
     @Override
@@ -108,6 +113,8 @@ public class MainApp extends Application {
 
             tabbedLayout.getTabs().get(tabs.CREATE_COURSE.number).setContent(courseCreation);
 
+            AddingCourseController controller = loader.getController();
+            controller.setMainApp(this);
         } catch (IOException e) {
             exceptionDialog(e);
         }
@@ -238,4 +245,12 @@ public class MainApp extends Application {
 
     	alert.showAndWait();
     }
+
+	public ObservableList<Person> getFreeDrivers() {
+		return freeDrivers;
+	}
+
+	public ObservableList<Person> getFreeHostess() {
+		return freeHostess;
+	}
 }
