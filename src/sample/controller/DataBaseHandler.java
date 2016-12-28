@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.Provider;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,10 +19,7 @@ import consts.BusConsts;
 import consts.DriveConsts;
 import consts.IntermediateDriveConsts;
 import consts.PersonConsts;
-import sample.model.Bus;
-import sample.model.Drive;
-import sample.model.IntermediateDrive;
-import sample.model.Person;
+import sample.model.*;
 
 public class DataBaseHandler {
 	/** Packet address for JDBC driver */
@@ -244,7 +242,7 @@ public class DataBaseHandler {
 		}
 		catch (SQLException ex)
 		{
-			System.err.println("Selecting intermediate drvies data failed.\n" + ex.getSQLState());
+			System.err.println("Selecting intermediate drives data failed.\n" + ex.getSQLState());
 		}
 		finally
 		{
@@ -342,6 +340,36 @@ public class DataBaseHandler {
 		catch (SQLException ex)
 		{
 			System.err.println("Selecting intermediate drvies from data failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return result;
+	}
+
+	public List<Services> getServices() {
+		String query = "select * from SERVICES";
+		List<Services> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next())
+			{
+				Services service = new Services(resultSet.getInt("SERVICE_ID"),
+						resultSet.getString("OPERATION"),
+						resultSet.getString("MEANINGNESS"));
+				result.add(service);
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting services from data failed.\n" + ex.getSQLState());
 		}
 		finally
 		{

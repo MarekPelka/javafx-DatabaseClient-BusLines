@@ -19,14 +19,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import sample.model.Bus;
-import sample.model.Drive;
-import sample.model.IntermediateDrive;
-import sample.model.Person;
-import sample.view.AddingCourseController;
-import sample.view.BusOverviewController;
-import sample.view.DriveOverviewController;
-import sample.view.PlanDriveController;
+import sample.model.*;
+import sample.view.*;
 
 public class MainApp extends Application {
 
@@ -37,7 +31,7 @@ public class MainApp extends Application {
     private ObservableList<Bus> busData = FXCollections.observableArrayList();
     private ObservableList<Person> freeDrivers = FXCollections.observableArrayList();
     private ObservableList<Person> freeHostess = FXCollections.observableArrayList();
-    //private ObservableList<IntermediateDrive> intermediateDrivesData = FXCollections.observableArrayList();
+    private ObservableList<Services> services = FXCollections.observableArrayList();
     private DataBaseHandler dbh;
     
     public static void main(String[] args) {
@@ -51,8 +45,6 @@ public class MainApp extends Application {
         CHECKUP(3);
         public int number;
         tabs(int i){number = i;};
-
-
     }
     
     public MainApp()
@@ -62,6 +54,7 @@ public class MainApp extends Application {
         busData.addAll(dbh.getAllBuses());
         freeDrivers.addAll(dbh.getFreeDrivers());
         freeHostess.addAll(dbh.getFreeHostess());
+        services.addAll(dbh.getServices());
     }
 
     @Override
@@ -157,6 +150,8 @@ public class MainApp extends Application {
 
             tabbedLayout.getTabs().get(tabs.CHECKUP.number).setContent(busOverview);
 
+            BusCheckupController controller = loader.getController();
+            controller.setMainApp(this);
         } catch (IOException e) {
             exceptionDialog(e);
         }
@@ -245,6 +240,14 @@ public class MainApp extends Application {
 
     	alert.showAndWait();
     }
+
+    public void goToBusInfo()
+    {
+        tabbedLayout.getSelectionModel().select(tabs.BUS_OVERVIEW.number);
+        //showBusDetails(bus);
+    }
+
+    public ObservableList<Services> getService() { return services; }
 
 	public ObservableList<Person> getFreeDrivers() {
 		return freeDrivers;

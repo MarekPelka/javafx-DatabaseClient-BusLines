@@ -47,6 +47,9 @@ public class Bus {
         this.busModelName = new SimpleStringProperty(modelName);
     }
 
+    @Override
+    public String toString() {return licensePlate.get(); }
+
     public int getMileage() {
         return mileage.get();
     }

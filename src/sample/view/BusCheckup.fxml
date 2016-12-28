@@ -37,7 +37,7 @@
                         <TextField fx:id="textFieldMileage" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="Mileage" GridPane.rowIndex="2" />
                         <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="308.0" text="Check" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Button mnemonicParsing="false" text="Details" GridPane.columnIndex="2" />
+                        <Button mnemonicParsing="false" onAction="#busDetails" text="Details" GridPane.columnIndex="2" />
                         <TextField fx:id="textFieldAge" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
