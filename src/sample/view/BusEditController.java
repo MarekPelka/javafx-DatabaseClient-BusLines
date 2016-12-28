@@ -43,7 +43,6 @@ public class BusEditController {
 
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;		
-		
 		comboBoxModel.setItems(mainApp.getBusModelData().stream().map(bm -> bm.getModelName())
     			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
 	}
@@ -86,6 +85,6 @@ public class BusEditController {
 	
    @FXML
     private void handleCancel() {
-        mainApp.showDriveOverview();
+        mainApp.showBusOverview();
     }
 }

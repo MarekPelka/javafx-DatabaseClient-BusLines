@@ -24,237 +24,238 @@ import sample.view.*;
 
 public class MainApp extends Application {
 
-    private Stage primaryStage;
-    private BorderPane rootLayout;
-    private TabPane tabbedLayout;
-    private ObservableList<Drive> driveData = FXCollections.observableArrayList();
-    private ObservableList<Bus> busData = FXCollections.observableArrayList();
-    private ObservableList<Person> freeDrivers = FXCollections.observableArrayList();
-    private ObservableList<Person> freeHostess = FXCollections.observableArrayList();
-    private ObservableList<Services> services = FXCollections.observableArrayList();
-    private ObservableList<BusModel> busModelData = FXCollections.observableArrayList();
-    private DataBaseHandler dbh;
-    
-    public static void main(String[] args) {
-        launch(args);
-    }
+	private Stage primaryStage;
+	private BorderPane rootLayout;
+	private TabPane tabbedLayout;
+	private ObservableList<Drive> driveData = FXCollections.observableArrayList();
+	private ObservableList<Bus> busData = FXCollections.observableArrayList();
+	private ObservableList<Person> freeDrivers = FXCollections.observableArrayList();
+	private ObservableList<Person> freeHostess = FXCollections.observableArrayList();
+	private ObservableList<Services> services = FXCollections.observableArrayList();
+	private ObservableList<BusModel> busModelData = FXCollections.observableArrayList();
+	private DataBaseHandler dbh;
 
-    private enum tabs{
-        CREATE_COURSE(2),
-        DRIVE_OVERVIEW(0),
-        BUS_OVERVIEW(1),
-        CHECKUP(3);
-        public int number;
-        tabs(int i){number = i;};
-    }
-    
-    public MainApp()
-    {
-    	dbh = new DataBaseHandler();
-        driveData.addAll(dbh.getAllDrives());
-        busData.addAll(dbh.getAllBuses());
-        freeDrivers.addAll(dbh.getFreeDrivers());
-        freeHostess.addAll(dbh.getFreeHostess());
-        services.addAll(dbh.getServices());
-        busModelData.addAll(dbh.getAllBusModels());
-    }
+	public static void main(String[] args) {
+		launch(args);
+	}
 
-    @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("WBD");
+	private enum tabs {
+		CREATE_COURSE(2), DRIVE_OVERVIEW(0), BUS_OVERVIEW(1), CHECKUP(3);
+		public int number;
 
-        initRootLayout();
-        initTabLayout();
-        showCourseCreation();
-        showDriveOverview();
-        showBusOverview();
-        showBusesCheckup();
+		tabs(int i) {
+			number = i;
+		};
+	}
 
-    }
+	public MainApp() {
+		dbh = new DataBaseHandler();
+		driveData.addAll(dbh.getAllDrives());
+		busData.addAll(dbh.getAllBuses());
+		freeDrivers.addAll(dbh.getFreeDrivers());
+		freeHostess.addAll(dbh.getFreeHostess());
+		services.addAll(dbh.getServices());
+		busModelData.addAll(dbh.getAllBusModels());
+	}
 
-    /**
-     * Initializes the root layout.
-     */
-    public void initRootLayout() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/Root.fxml"));
-            rootLayout = (BorderPane) loader.load();
+	@Override
+	public void start(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		this.primaryStage.setTitle("WBD");
 
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
-        	exceptionDialog(e);
-        }
-    }
+		initRootLayout();
+		initTabLayout();
+		showCourseCreation();
+		showDriveOverview();
+		showBusOverview();
+		showBusesCheckup();
 
-    public void initTabLayout() {
-        try {
+	}
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/TabLayout.fxml"));
-            tabbedLayout = (TabPane) loader.load();
+	/**
+	 * Initializes the root layout.
+	 */
+	public void initRootLayout() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/Root.fxml"));
+			rootLayout = (BorderPane) loader.load();
 
-            rootLayout.setCenter(tabbedLayout);
+			Scene scene = new Scene(rootLayout);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			exceptionDialog(e);
+		}
+	}
 
-        } catch (IOException e) {
-        	exceptionDialog(e);
-        }
-    }
+	public void initTabLayout() {
+		try {
 
-    public void showCourseCreation() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/AddingCourse.fxml"));
-            AnchorPane courseCreation = (AnchorPane) loader.load();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/TabLayout.fxml"));
+			tabbedLayout = (TabPane) loader.load();
 
-            tabbedLayout.getTabs().get(tabs.CREATE_COURSE.number).setContent(courseCreation);
+			rootLayout.setCenter(tabbedLayout);
 
-            AddingCourseController controller = loader.getController();
-            controller.setMainApp(this);
-        } catch (IOException e) {
-            exceptionDialog(e);
-        }
-    }
-    /**
-     * Shows the drive overview inside the root layout.
-     */
-    public void showDriveOverview() {
-        try {
+		} catch (IOException e) {
+			exceptionDialog(e);
+		}
+	}
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/DriveOverview.fxml"));
-            AnchorPane driveOverview = (AnchorPane) loader.load();
+	public void showCourseCreation() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/AddingCourse.fxml"));
+			AnchorPane courseCreation = (AnchorPane) loader.load();
 
-            tabbedLayout.getTabs().get(tabs.DRIVE_OVERVIEW.number).setContent(driveOverview);
+			tabbedLayout.getTabs().get(tabs.CREATE_COURSE.number).setContent(courseCreation);
 
-            DriveOverviewController controller = loader.getController();
-            controller.setMainApp(this);
-        } catch (IOException e) {
-        	exceptionDialog(e);
-        }
-    }
+			AddingCourseController controller = loader.getController();
+			controller.setMainApp(this);
+		} catch (IOException e) {
+			exceptionDialog(e);
+		}
+	}
 
-    public void showBusOverview() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusOverview.fxml"));
-            AnchorPane busOverview = (AnchorPane) loader.load();
+	/**
+	 * Shows the drive overview inside the root layout.
+	 */
+	public void showDriveOverview() {
+		try {
 
-            tabbedLayout.getTabs().get(tabs.BUS_OVERVIEW.number).setContent(busOverview);
-            BusOverviewController controller = loader.getController();
-            controller.setMainApp(this);
-        } catch (IOException e) {
-        	exceptionDialog(e);
-        }
-    }
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/DriveOverview.fxml"));
+			AnchorPane driveOverview = (AnchorPane) loader.load();
 
-    public void showBusesCheckup() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusCheckup.fxml"));
-            AnchorPane busOverview = (AnchorPane) loader.load();
+			tabbedLayout.getTabs().get(tabs.DRIVE_OVERVIEW.number).setContent(driveOverview);
 
-            tabbedLayout.getTabs().get(tabs.CHECKUP.number).setContent(busOverview);
+			DriveOverviewController controller = loader.getController();
+			controller.setMainApp(this);
+		} catch (IOException e) {
+			exceptionDialog(e);
+		}
+	}
 
-            BusCheckupController controller = loader.getController();
-            controller.setMainApp(this);
-        } catch (IOException e) {
-            exceptionDialog(e);
-        }
-    }
+	public void showBusOverview() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusOverview.fxml"));
+			AnchorPane busOverview = (AnchorPane) loader.load();
 
-    public boolean showDriveEditDialog(Drive drive) {
-        try {
-            // Load the fxml file and create a new stage for the popup dialog.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("/sample/view/PlanDrive.fxml"));
-            AnchorPane page = (AnchorPane) loader.load();
+			tabbedLayout.getTabs().get(tabs.BUS_OVERVIEW.number).setContent(busOverview);
+			BusOverviewController controller = loader.getController();
+			controller.setMainApp(this);
+		} catch (IOException e) {
+			exceptionDialog(e);
+		}
+	}
 
-            tabbedLayout.getTabs().get(tabs.DRIVE_OVERVIEW.number).setContent(page);
+	public void showBusesCheckup() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/BusCheckup.fxml"));
+			AnchorPane busOverview = (AnchorPane) loader.load();
 
-            PlanDriveController controller = loader.getController();
+			tabbedLayout.getTabs().get(tabs.CHECKUP.number).setContent(busOverview);
 
-            controller.setMainApp(this);
-            controller.setDrive(drive);
+			BusCheckupController controller = loader.getController();
+			controller.setMainApp(this);
+		} catch (IOException e) {
+			exceptionDialog(e);
+		}
+	}
 
-            return controller.isOkClicked();
-        } catch (IOException e) {
-        	exceptionDialog(e);
-            return false;
-        }
-    }
-    /**
-     * Returns the main stage.
-     * @return
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
+	public boolean showDriveEditDialog(Drive drive) {
+		try {
+			// Load the fxml file and create a new stage for the popup dialog.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("/sample/view/PlanDrive.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
 
-    public ObservableList<Drive> getDriveData() {
-        return driveData;
-    }
+			tabbedLayout.getTabs().get(tabs.DRIVE_OVERVIEW.number).setContent(page);
 
-    public ObservableList<IntermediateDrive> getIntermediateDrivesData() {
-        ObservableList<IntermediateDrive> intermediateDrivesData = FXCollections.observableArrayList();
-        intermediateDrivesData.addAll(dbh.getIntermediateDrivesData());
-        return intermediateDrivesData;
-    }
+			PlanDriveController controller = loader.getController();
 
-    public ObservableList<IntermediateDrive> getIntermediateDrivesFromData(String cityFrom) {
-        ObservableList<IntermediateDrive> intermediateDrivesFromData = FXCollections.observableArrayList();
-        intermediateDrivesFromData.addAll(dbh.getIntermediateDrivesFromData(cityFrom));
-        return intermediateDrivesFromData;
-    }
+			controller.setMainApp(this);
+			controller.setDrive(drive);
 
-    public ObservableList<Bus> getBusData() {
-        return busData;
-    }
-    
-    
-    public void exceptionDialog(Exception e)
-    {
-    	Alert alert = new Alert(AlertType.ERROR);
-    	alert.setTitle("Exception Dialog");
-    	alert.setHeaderText("Look, an Exception Dialog");
-    	alert.setContentText("Error has occured");
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			exceptionDialog(e);
+			return false;
+		}
+	}
 
-    	// Create expandable Exception.
-    	StringWriter sw = new StringWriter();
-    	PrintWriter pw = new PrintWriter(sw);
-    	e.printStackTrace(pw);
-    	String exceptionText = sw.toString();
+	/**
+	 * Returns the main stage.
+	 * 
+	 * @return
+	 */
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
 
-    	Label label = new Label("The exception stacktrace was:");
+	public ObservableList<Drive> getDriveData() {
+		return driveData;
+	}
 
-    	TextArea textArea = new TextArea(exceptionText);
-    	textArea.setEditable(false);
-    	textArea.setWrapText(true);
+	public ObservableList<IntermediateDrive> getIntermediateDrivesData() {
+		ObservableList<IntermediateDrive> intermediateDrivesData = FXCollections.observableArrayList();
+		intermediateDrivesData.addAll(dbh.getIntermediateDrivesData());
+		return intermediateDrivesData;
+	}
 
-    	textArea.setMaxWidth(Double.MAX_VALUE);
-    	textArea.setMaxHeight(Double.MAX_VALUE);
-    	GridPane.setVgrow(textArea, Priority.ALWAYS);
-    	GridPane.setHgrow(textArea, Priority.ALWAYS);
+	public ObservableList<IntermediateDrive> getIntermediateDrivesFromData(String cityFrom) {
+		ObservableList<IntermediateDrive> intermediateDrivesFromData = FXCollections.observableArrayList();
+		intermediateDrivesFromData.addAll(dbh.getIntermediateDrivesFromData(cityFrom));
+		return intermediateDrivesFromData;
+	}
 
-    	GridPane expContent = new GridPane();
-    	expContent.setMaxWidth(Double.MAX_VALUE);
-    	expContent.add(label, 0, 0);
-    	expContent.add(textArea, 0, 1);
+	public ObservableList<Bus> getBusData() {
+		return busData;
+	}
 
-    	// Set expandable Exception into the dialog pane.
-    	alert.getDialogPane().setExpandableContent(expContent);
+	public void exceptionDialog(Exception e) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Exception Dialog");
+		alert.setHeaderText("Look, an Exception Dialog");
+		alert.setContentText("Error has occured");
 
-    	alert.showAndWait();
-    }
+		// Create expandable Exception.
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		String exceptionText = sw.toString();
 
-    public void goToBusInfo()
-    {
-        tabbedLayout.getSelectionModel().select(tabs.BUS_OVERVIEW.number);
-        //showBusDetails(bus);
-    }
+		Label label = new Label("The exception stacktrace was:");
 
-    public ObservableList<BusModel> getBusModelData() {
-        return busModelData;
-    }
+		TextArea textArea = new TextArea(exceptionText);
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
 
-    public ObservableList<Services> getService() { return services; }
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		// Set expandable Exception into the dialog pane.
+		alert.getDialogPane().setExpandableContent(expContent);
+
+		alert.showAndWait();
+	}
+
+	public void goToBusInfo() {
+		tabbedLayout.getSelectionModel().select(tabs.BUS_OVERVIEW.number);
+		// showBusDetails(bus);
+	}
+
+	public ObservableList<BusModel> getBusModelData() {
+		return busModelData;
+	}
+
+	public ObservableList<Services> getService() {
+		return services;
+	}
 
 	public ObservableList<Person> getFreeDrivers() {
 		return freeDrivers;
