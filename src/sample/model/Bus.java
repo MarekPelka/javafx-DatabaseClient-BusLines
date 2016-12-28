@@ -11,7 +11,7 @@ public class Bus {
 
     private final int busId;  
     private final int busModelId;
-    private final Date dateOfBuy;
+    private Date dateOfBuy;
     private final StringProperty licensePlate;
     private final StringProperty sereialNumber;
     private final IntegerProperty seats;
@@ -74,7 +74,7 @@ public class Bus {
         return classRate;
     }
 
-    public void setClassRate(int category) {
+    public void setClassRate(float category) {
         this.classRate.set(category);
     }
 
@@ -129,4 +129,8 @@ public class Bus {
 	public String getModelName() {
 		return busModelName.get();
 	}
+
+    public void setDateOfBuy(Date date) {
+        dateOfBuy = date;
+    }
 }
