@@ -1,74 +1,3 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
-/*.root {
-	-fx-spacing: 30;
-	-fx-background-color: rgb(64,64,64);
-	
-}
-
-.button {
-	-fx-background-color: 
-        #090a0c,
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        linear-gradient(#20262b, #191d22),
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
-    -fx-background-radius: 5,4,3,5;
-    -fx-background-insets: 0,1,2,0;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-    -fx-font-family: "Arial";
-    -fx-text-fill: linear-gradient(white, DARKORANGE);
-    -fx-font-size: 12px;
-    -fx-padding: 5 5 5 5;
-    -fx-pref-height: 20;
-}
-
-.label {
-	-fx-text-fill: DARKORANGE;
-}
-
-.table-view {
-    -fx-base: #1d1d1d;
-    -fx-control-inner-background: #1d1d1d;
-    -fx-background-color: #1d1d1d;
-    -fx-focus-color: #1d1d1d;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
-    -fx-padding: 5;
-}
-
-.table-view .column-header-background {
-    -fx-background-color: transparent;
-}
-
-.table-view .column-header, .table-view .filler {
--fx-focus-color: #1d1d1d;
-    -fx-size: 12;
-    -fx-border-width: 0 5 0 5;
-    -fx-background-color: transparent;
-    -fx-border-color:
-        transparent
-        transparent
-        derive(-fx-base, 80%)
-        transparent;
-    -fx-border-insets: 0 10 1 0;
-}
-
-.table-view .column-header .label {
--fx-focus-color: #1d1d1d;
-    -fx-font-size: 14pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: white;
-    -fx-alignment: center-left;
-    -fx-opacity: 1;
-}
-
-.table-view:focused .table-row-cell:filled:focused:selected {
-    -fx-focus-color: #1d1d1d;
-    -fx-background-color: #1d1d1d;
-    -fx-border-color: DARKORANGE;
-    -fx-border-width: 0 0 0 5;
-}*/
-
 .background {
     -fx-background-color: #1d1d1d;
 }
@@ -96,8 +25,10 @@
 
 .table-view {
     -fx-base: #1d1d1d;
+    -fx-font-family: "Segoe UI Semibold";
     -fx-control-inner-background: #1d1d1d;
     -fx-background-color: rgb(255,128,0);
+    -fx-focus-color: #1d1d1d;
     -fx-table-cell-border-color: transparent;
     -fx-table-header-border-color: transparent;
     -fx-padding: 5;
@@ -107,16 +38,21 @@
     -fx-background-color: transparent;
 }
 
+.table-view > .virtual-flow {
+    /* Region */
+    -fx-background-color: #1d1d1d;
+}
+
 .table-view .column-header, .table-view .filler {
     -fx-size: 35;
-    -fx-border-width: 0 0 1 0;
+    -fx-border-width: 0 0 0 0;
     -fx-background-color: transparent;
     -fx-border-color:
         transparent
         transparent
         derive(-fx-base, 80%)
         transparent;
-    -fx-border-insets: 0 10 1 0;
+    -fx-border-insets: 0 10 0 0;
 }
 
 .table-view .column-header .label {
@@ -129,7 +65,36 @@
 
 .table-view:focused .table-row-cell:filled:focused:selected {
         -fx-background-color: #1d1d1d;
-        -fx-border-color: DARKORANGE;
+        -fx-border-color: rgb(255,128,0);
+        -fx-border-width: 0 0 0 5;
+}
+
+.table-row-cell{
+    -fx-border-width: 0 0 0 5;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.list-view{
+    -fx-base: #1d1d1d;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-control-inner-background: #1d1d1d;
+    -fx-background-color: #1d1d1d;
+    -fx-focus-color: #1d1d1d;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+    -fx-padding: 5;
+}
+
+.list-cell{
+    -fx-border-width: 0 0 0 5;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.list-cell:filled:focused:selected {
+        -fx-background-color: #1d1d1d;
+        -fx-border-color: rgb(255,128,0);
         -fx-border-width: 0 0 0 5;
 }
 
@@ -139,7 +104,7 @@
 }
 
 .split-pane {
-    -fx-padding: 1 0 0 0;
+    -fx-padding: 0 0 0 0;
 }
 
 .menu-bar {
