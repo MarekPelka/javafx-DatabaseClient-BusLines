@@ -54,10 +54,10 @@
                            </children></AnchorPane>
                     </items>
                   </SplitPane>
-                  <Button layoutX="191.0" layoutY="261.0" mnemonicParsing="false" onAction="#addStop" text="Add Stop" AnchorPane.bottomAnchor="5.0" />
-                  <Button layoutX="14.0" layoutY="261.0" mnemonicParsing="false" text="Remove Stop" AnchorPane.bottomAnchor="5.0" />
+                  <Button layoutX="191.0" layoutY="261.0" mnemonicParsing="false" onAction="#addStop" text="Add Stop" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                  <Button layoutX="14.0" layoutY="261.0" mnemonicParsing="false" onAction="#removeStop" text="Remove Stop" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
                   <Label layoutX="154.0" layoutY="4.0" text="Drive From: " />
-                  <Text fx:id="driveStart" layoutX="262.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                  <Text fx:id="textDriveStart" layoutX="262.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="background">

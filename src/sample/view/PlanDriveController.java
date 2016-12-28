@@ -16,7 +16,6 @@ import sample.model.Drive;
 import sample.model.IntermediateDrive;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Marek on 2016-12-25.
@@ -40,7 +39,7 @@ public class PlanDriveController {
     private TableColumn<IntermediateDrive, String> columnPossibleStops;
 
     @FXML
-    private Text driveStart;
+    private Text textDriveStart;
     @FXML
     private Label labelTime;
     @FXML
@@ -86,8 +85,8 @@ public class PlanDriveController {
             this.labelDistance.setText(String.valueOf(drive.getDistance()));
             this.labelPrice.setText(String.valueOf(drive.getPrice()));
 
-            this.driveStart.setText(drive.getFrom().replace(" ", ""));
-            this.driveStart.setFill(Color.DARKORANGE);
+            this.textDriveStart.setText(drive.getFrom());
+            this.textDriveStart.setFill(Color.DARKORANGE);
 
             tableStops.setItems(FXCollections.observableArrayList (drive.getListOfIntermediateDrive()));
             columnStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
@@ -100,7 +99,7 @@ public class PlanDriveController {
             this.labelTime.setText("0");
             this.labelDistance.setText("0");
             this.labelPrice.setText("0");
-            this.driveStart.setText("");
+            this.textDriveStart.setText("");
 
             tablePossibleStops.setItems(mainApp.getIntermediateDrivesData());
             columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityFromProperty());
@@ -114,11 +113,7 @@ public class PlanDriveController {
     @FXML
     private void handleOk() {
         if (isInputValid()) {
-            drive.setFrom(null);
-            drive.setTo(null);
-            drive.setDistance(0);
-            drive.setTime(0);
-            drive.setPrice(0);
+            drive.setTo(tableStops.getItems().get(tableStops.getItems().size() - 1).getCityTo());
 
             okClicked = true;
             mainApp.showDriveOverview();
@@ -128,15 +123,87 @@ public class PlanDriveController {
     @FXML
     private void addStop() {
 
-//        driveInProgres.add((IntermediateDrive) possibleStops.getSelectionModel().getSelectedItem());
-//        List<String> intermediateStopsNames = new ArrayList<>();
-//        driveInProgres.forEach(d -> intermediateStopsNames.add(d.getCityFrom()));
-//        ObservableList<String> items = FXCollections.observableArrayList (intermediateStopsNames);
-//        stopsOnRoute.setItems(items);
-//        List<String> intermediateNames = new ArrayList<>();
-//        mainApp.getIntermediateDrivesFromData(driveInProgres.get(driveInProgres.size() - 1).getCityFrom());
-//        items = FXCollections.observableArrayList (intermediateNames);
-//        possibleStops.setItems(items);
+        if(tablePossibleStops.getSelectionModel().getSelectedItem() == null)
+            return;
+            if ((drive.getListOfIntermediateDrive() == null || drive.getListOfIntermediateDrive().isEmpty()) && drive.getFrom() == null) {
+                drive.setFrom(tablePossibleStops.getSelectionModel().selectedItemProperty().get().getCityFrom());
+
+                tablePossibleStops.setItems(mainApp.getIntermediateDrivesFromData(drive.getFrom()));
+                columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+
+                this.textDriveStart.setText(drive.getFrom());
+                this.textDriveStart.setFill(Color.DARKORANGE);
+
+                drive.setDistance(0);
+                drive.setTime(0);
+                drive.setPrice(0);
+            } else if ((drive.getListOfIntermediateDrive() == null || drive.getListOfIntermediateDrive().isEmpty())) {
+                List<IntermediateDrive> temp = new ArrayList<>();
+                temp.add(tablePossibleStops.getSelectionModel().selectedItemProperty().get());
+                drive.setListOfIntermediateDrive(temp);
+                tableStops.setItems(FXCollections.observableArrayList(drive.getListOfIntermediateDrive()));
+                columnStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+                tablePossibleStops.setItems(mainApp.getIntermediateDrivesFromData(tableStops.getItems().get(tableStops.getItems().size() - 1).getCityTo()));
+                columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+
+                drive.setDistance(drive.getListOfIntermediateDrive().stream().mapToInt(d -> d.getDistance()).sum());
+                drive.setTime(drive.getListOfIntermediateDrive().stream().mapToInt(d -> d.getTime()).sum());
+                drive.setPrice(((float) drive.getListOfIntermediateDrive().stream().mapToDouble(d -> d.getPrice()).sum()));
+            } else {
+                drive.getListOfIntermediateDrive().add(tablePossibleStops.getSelectionModel().selectedItemProperty().get());
+                tableStops.setItems(FXCollections.observableArrayList(drive.getListOfIntermediateDrive()));
+                columnStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+                tablePossibleStops.setItems(mainApp.getIntermediateDrivesFromData(tableStops.getItems().get(tableStops.getItems().size() - 1).getCityTo()));
+                columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+
+                drive.setDistance(drive.getListOfIntermediateDrive().stream().mapToInt(d -> d.getDistance()).sum());
+                drive.setTime(drive.getListOfIntermediateDrive().stream().mapToInt(d -> d.getTime()).sum());
+                drive.setPrice(((float) drive.getListOfIntermediateDrive().stream().mapToDouble(d -> d.getPrice()).sum()));
+            }
+
+        this.labelTime.setText(String.valueOf(drive.getTime()));
+        this.labelDistance.setText(String.valueOf(drive.getDistance()));
+        this.labelPrice.setText(String.valueOf(drive.getPrice()));
+
+    }
+
+    @FXML
+    private void removeStop() {
+
+        if(drive.getListOfIntermediateDrive() == null)
+            return;
+        if(drive.getListOfIntermediateDrive().isEmpty())
+        {
+            drive.setFrom(null);
+            textDriveStart.setText("");
+            tablePossibleStops.setItems(mainApp.getIntermediateDrivesData());
+            columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityFromProperty());
+            return;
+        }
+
+        drive.getListOfIntermediateDrive().remove(tableStops.getItems().get(tableStops.getItems().size() - 1));
+        if(drive.getListOfIntermediateDrive().isEmpty())
+        {
+            tablePossibleStops.setItems(mainApp.getIntermediateDrivesFromData(drive.getFrom()));
+            columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+
+            tableStops.setItems(null);
+            this.labelTime.setText("0");
+            this.labelDistance.setText("0");
+            this.labelPrice.setText("0");
+            return;
+        }
+        tableStops.setItems(FXCollections.observableArrayList(drive.getListOfIntermediateDrive()));
+        columnStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+        tablePossibleStops.setItems(mainApp.getIntermediateDrivesFromData(tableStops.getItems().get(tableStops.getItems().size() - 1).getCityTo()));
+        columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
+
+        drive.setDistance(drive.getListOfIntermediateDrive().stream().mapToInt(d -> d.getDistance()).sum());
+        drive.setTime(drive.getListOfIntermediateDrive().stream().mapToInt(d -> d.getTime()).sum());
+        drive.setPrice(((float) drive.getListOfIntermediateDrive().stream().mapToDouble(d -> d.getPrice()).sum()));
+        this.labelTime.setText(String.valueOf(drive.getTime()));
+        this.labelDistance.setText(String.valueOf(drive.getDistance()));
+        this.labelPrice.setText(String.valueOf(drive.getPrice()));
     }
 
     private boolean isInputValid() {

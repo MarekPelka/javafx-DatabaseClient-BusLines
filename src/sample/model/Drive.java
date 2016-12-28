@@ -20,7 +20,7 @@ public class Drive {
     private final IntegerProperty time;
     private final IntegerProperty distance;
     private final FloatProperty price;
-    private final List<IntermediateDrive> listOfIntermediateDrive;
+    private List<IntermediateDrive> listOfIntermediateDrive;
 
     public Drive()
     {
@@ -116,12 +116,16 @@ public class Drive {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price.set(price);
     }
 
     public List<IntermediateDrive> getListOfIntermediateDrive() {
         return listOfIntermediateDrive;
+    }
+
+    public void setListOfIntermediateDrive(List<IntermediateDrive> intermediateDrive) {
+        this.listOfIntermediateDrive = new ArrayList<>(intermediateDrive);
     }
 
 	public int getId() {
