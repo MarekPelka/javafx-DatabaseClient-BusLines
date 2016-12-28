@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Properties;
 
 import consts.BusConsts;
+import consts.BusModelConsts;
 import consts.DriveConsts;
 import consts.IntermediateDriveConsts;
 import consts.PersonConsts;

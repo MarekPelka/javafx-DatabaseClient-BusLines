@@ -263,4 +263,26 @@ public class MainApp extends Application {
 	public ObservableList<Person> getFreeHostess() {
 		return freeHostess;
 	}
+
+	public boolean showBusEditDialog(Bus bus) {
+		try {
+			// Load the fxml file and create a new stage for the popup dialog.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("/sample/view/BusEdit.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+
+			tabbedLayout.getTabs().get(tabs.BUS_OVERVIEW.number).setContent(page);
+
+			BusEditController controller = loader.getController();
+
+			controller.setMainApp(this);
+			controller.setBus(bus);
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			exceptionDialog(e);
+			return false;
+		}
+	}
+
 }

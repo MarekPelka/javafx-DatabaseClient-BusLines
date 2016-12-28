@@ -65,4 +65,13 @@ public class BusOverviewController {
             labelSerialNumber.setText("");
         }
     }
+    
+    @FXML
+    private void handleNewBus() {
+        Bus tempBus = new Bus();
+        boolean okClicked = mainApp.showBusEditDialog(tempBus);
+        if (okClicked) {
+            mainApp.getBusData().add(tempBus);
+        }
+    }
 }

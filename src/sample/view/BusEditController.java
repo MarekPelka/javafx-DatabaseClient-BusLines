@@ -9,11 +9,13 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import sample.controller.MainApp;
 import sample.model.Bus;
 
-public class BusEditController {
+public class BusEditController {	    
 	@FXML
 	private TextField txtPlate;
 	@FXML
