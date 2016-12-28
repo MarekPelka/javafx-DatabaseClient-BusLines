@@ -30,7 +30,9 @@
                         <Label text="Seats Number" GridPane.rowIndex="3" />
                         <Label text="Milege" GridPane.rowIndex="4" />
                         <Label text="Serial Number" GridPane.rowIndex="5" />
+                        <Label text="Bought date" GridPane.rowIndex="6" />
                         <Label fx:id="labelPlate" text="Label" GridPane.columnIndex="1" />
+                        <Label fx:id="labelBoughtDate" text="" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label fx:id="labelSerialNumber" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label fx:id="labelMileage" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label fx:id="labelSeats" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -54,7 +56,7 @@
                   <ToolBar layoutX="227.0" layoutY="320.0" styleClass="background" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                      <items>
                         <Button mnemonicParsing="false" onAction="#handleNewBus" text="New..." />
-                        <Button mnemonicParsing="false" text="Edit..." />
+                        <Button mnemonicParsing="false" onAction="#handleEditBus" text="Edit..." />
                         <Button mnemonicParsing="false" text="Delete" />
                      </items>
                   </ToolBar>

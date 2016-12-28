@@ -1,11 +1,13 @@
 package sample.view;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import sample.controller.MainApp;
 import sample.model.Bus;
+import sample.model.Drive;
 
 /**
  * Created by Marek on 2016-12-26.
@@ -29,6 +31,8 @@ public class BusOverviewController {
     private Label labelMileage;
     @FXML
     private Label labelSerialNumber;
+    @FXML
+    private Label labelBoughtDate;
 
     private MainApp mainApp;
 
@@ -54,7 +58,7 @@ public class BusOverviewController {
             labelSeats.setText(String.valueOf(bus.getSeats()));
             labelMileage.setText(String.valueOf(bus.getMileage()));
             labelSerialNumber.setText(String.valueOf(bus.getSereialNumber()));
-
+            labelBoughtDate.setText(String.valueOf(bus.getDateOfBuy()));
         }else
         {
             labelPlate.setText("");
@@ -72,6 +76,27 @@ public class BusOverviewController {
         boolean okClicked = mainApp.showBusEditDialog(tempBus);
         if (okClicked) {
             mainApp.getBusData().add(tempBus);
+        }
+    }
+    
+    @FXML
+    private void handleEditBus() {
+        Bus selectedBus = tableBus.getSelectionModel().getSelectedItem();
+        if (selectedBus != null) {
+            boolean okClicked = mainApp.showBusEditDialog(selectedBus);
+            if (okClicked) {
+            	showBusDetails(selectedBus);
+            }
+
+        } else {
+            // Nothing selected.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(mainApp.getPrimaryStage());
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Drive Selected");
+            alert.setContentText("Please select a drive in the table.");
+
+            alert.showAndWait();
         }
     }
 }

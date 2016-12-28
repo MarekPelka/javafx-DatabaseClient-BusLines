@@ -2,6 +2,7 @@ package sample.view;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,13 @@ import javafx.scene.control.TextField;
 import sample.controller.MainApp;
 import sample.model.Bus;
 
-public class BusEditController {	    
+public class BusEditController {	 
+	
+	@FXML
+    private TableView<Bus> tableBus;
+    @FXML
+    private TableColumn<Bus, String> columnBusPlate;
+	    
 	@FXML
 	private TextField txtPlate;
 	@FXML
@@ -38,11 +45,12 @@ public class BusEditController {
 	
 	 @FXML
     private void initialize() {
-	//TODO
+		 columnBusPlate.setCellValueFactory(cellData -> cellData.getValue().licensePlateProperty());
     }
 
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;		
+		tableBus.setItems(mainApp.getBusData());
 		comboBoxModel.setItems(mainApp.getBusModelData().stream().map(bm -> bm.getModelName())
     			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
 	}
@@ -57,6 +65,7 @@ public class BusEditController {
 			txtMileage.setText("" + bus.getMileage());
 			txtSeats.setText("" + bus.getSeats());
 			comboBoxModel.selectionModelProperty().get().select(bus.getModelName());
+			datePicker.setValue(LOCAL_DATE(String.valueOf(bus.getDateOfBuy())));
 			txtCategory.setText("" + bus.getClassRate());
 		}
 		
@@ -87,4 +96,10 @@ public class BusEditController {
     private void handleCancel() {
         mainApp.showBusOverview();
     }
+   
+   public static final LocalDate LOCAL_DATE (String dateString){
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    LocalDate localDate = LocalDate.parse(dateString, formatter);
+	    return localDate;
+	}
 }
