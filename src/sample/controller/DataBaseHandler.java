@@ -425,6 +425,11 @@ public class DataBaseHandler {
 			statement.setString(counter++, drive.getFrom());
 			statement.setString(counter++, drive.getTo());
 			statement.executeUpdate();
+			int id = getDriveId(drive);
+			for(IntermediateDrive idr : drive.getListOfIntermediateDrive())
+			{
+				connectIntermediateDriveWithDrive(idr.getId(),id);
+			}
 		}
 		catch (SQLException ex)
 		{
@@ -434,6 +439,56 @@ public class DataBaseHandler {
 		{
 			endConnection(c);
 		}
+	}
+	
+	private void connectIntermediateDriveWithDrive(int intermediateId, int driveId) {
+		String query = "INSERT INTO " + "DRIVE_CONTENTS" + "(INTERMEDIATE_DRIVE_ID,DRIVE_ID) "
+				 + "VALUES(?,?)";
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			int counter = 1;
+			statement.setInt(counter++, intermediateId);
+			statement.setInt(counter++, driveId);
+			statement.executeUpdate();
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Inserting in DRIVE_CONTENTS failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+	}
+
+	public int getDriveId(Drive drive) {
+		String query = "select DRIVE_ID from DRIVES where CITY_FROM=? AND CITY_TO=?";
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			int counter = 1;
+			statement.setString(counter++, drive.getFrom());
+			statement.setString(counter++, drive.getTo());
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				return resultSet.getInt("DRIVE_ID");
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting drive id via cities failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+		return -1;
 	}
 	
 	public void updateDrive(Drive drive) {

@@ -20,7 +20,7 @@ public class IntermediateDrive {
 
     public IntermediateDrive()
     {
-        this(0,null, null);
+        this(-1,null, null);
     }
 
     public IntermediateDrive(int id,String from, String to)

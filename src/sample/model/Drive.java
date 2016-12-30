@@ -24,7 +24,7 @@ public class Drive {
 
     public Drive()
     {
-        this(0, null,null);
+        this(-1, null,null);
     }
 
     public Drive(int id, String from, String to)
