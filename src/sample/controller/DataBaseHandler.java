@@ -412,9 +412,75 @@ public class DataBaseHandler {
 
 		return result;
 	}
+	/** INSERT UPDATE DELETE DRIVE*/
+	public void insertDrive(Drive drive) {
+		String query = "INSERT INTO " + "DRIVES" + "(DRIVE_ID,CITY_FROM,CITY_TO) "
+				 + "VALUES(DRIVE_SEQ.NEXTVAL,?,?)";
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			int counter = 1;
+			statement.setString(counter++, drive.getFrom());
+			statement.setString(counter++, drive.getTo());
+			statement.executeUpdate();
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Inserting drive failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+	}
 	
+	public void updateDrive(Drive drive) {
+		String query = "update DRIVES set CITY_FROM=?,CITY_TO=? "
+				+ "where DRIVE_ID=?";
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			int counter = 1;
+			statement.setString(counter++, drive.getFrom());
+			statement.setString(counter++, drive.getTo());
+			statement.setInt(counter++, drive.getId());
+			statement.executeUpdate();
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Updating drive failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+	}
 	
-	/** INSERT */
+	public void deleteDrive(Drive drive) {
+		String query = "delete from DRIVES where DRIVE_ID=?";
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			statement.setInt(1, drive.getId());
+			statement.executeUpdate();
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Deleting drive failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+	}
+	
+	/** INSERT UPDATE DELETE BUS*/
 	public void insertBus(Bus bus) {
 		String query = "INSERT INTO " + "BUSES" + "(BUS_ID,BUS_MODEL_ID,BOUGHT_TIME,LICENSE_PLATE,"
 				+ "SERIAL_NUMBER,SEATS_NUMBER,MILEAGE,CLASS_RATE) " + "VALUES (BUS_SEQ.NEXTVAL,?,?,?,?,?,?,?)";
@@ -424,7 +490,8 @@ public class DataBaseHandler {
 			c = createConnection();
 			PreparedStatement statement = c.prepareStatement(query);
 			int counter = 1;
-			statement.setInt(counter++, bus.getBusModelId());
+			BusModel model = getBusModelByName(bus.getModelName());
+			statement.setInt(counter++, model.getId());
 			statement.setDate(counter++, bus.getDateOfBuy());
 			statement.setString(counter++, bus.getLicensePlate());
 			statement.setString(counter++, bus.getSereialNumber());
@@ -443,9 +510,38 @@ public class DataBaseHandler {
 		}
 	}
 	
+	public void updateBus(Bus bus) {
+		String query = "update BUSES set BUS_MODEL_ID=?,BOUGHT_TIME=?,LICENSE_PLATE=?,"
+				+ "SERIAL_NUMBER=?,SEATS_NUMBER=?,MILEAGE=?,CLASS_RATE=? where BUS_ID=?";
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			int counter = 1;
+			BusModel model = getBusModelByName(bus.getModelName());
+			statement.setInt(counter++, model.getId());
+			statement.setDate(counter++, bus.getDateOfBuy());
+			statement.setString(counter++, bus.getLicensePlate());
+			statement.setString(counter++, bus.getSereialNumber());
+			statement.setInt(counter++, bus.getSeats());
+			statement.setInt(counter++, bus.getMileage());
+			statement.setFloat(counter++, bus.getClassRate());
+			statement.setInt(counter++, bus.getBusId());
+			statement.executeUpdate();
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Updating bus failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+	}
+	
 	public void deleteBus(Bus bus) {
 		String query = "delete from BUSES where BUS_ID=?";
-		List<BusModel> result = new ArrayList<>();
 		Connection c = null;
 		try
 		{
@@ -462,5 +558,33 @@ public class DataBaseHandler {
 		{
 			endConnection(c);
 		}
+	}
+	
+	private BusModel getBusModelByName(String busModelName) {
+		String query = "select * from BUS_MODELS where NAME='" + busModelName + "'";
+		BusModel busModel = null;
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next())
+			{
+				busModel = new BusModel(resultSet.getInt(BusModelConsts.ID),
+						resultSet.getString(BusModelConsts.MODEL_NAME));
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Selecting  bus model by name failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+
+		return busModel;
 	}
 }

@@ -114,8 +114,11 @@ public class PlanDriveController {
     private void handleOk() {
         if (isInputValid()) {
             drive.setTo(tableStops.getItems().get(tableStops.getItems().size() - 1).getCityTo());
-
             okClicked = true;
+            if(drive.getId() == -1)
+            	mainApp.insertDrive(drive);
+            else
+            	mainApp.editDrive(drive);
             mainApp.showDriveOverview();
         }
     }

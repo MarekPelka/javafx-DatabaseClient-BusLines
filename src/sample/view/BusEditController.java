@@ -58,8 +58,7 @@ public class BusEditController {
 	public void setBus(Bus bus) {
 		this.bus = bus;
 		
-		if(bus.getBusId() != -1)
-		{
+
 			txtPlate.setText(bus.getLicensePlate());
 			txtSerialNumber.setText(bus.getSereialNumber());
 			txtMileage.setText("" + bus.getMileage());
@@ -67,7 +66,7 @@ public class BusEditController {
 			comboBoxModel.selectionModelProperty().get().select(bus.getModelName());
 			datePicker.setValue(LOCAL_DATE(String.valueOf(bus.getDateOfBuy())));
 			txtCategory.setText("" + bus.getClassRate());
-		}
+		
 		
 	}
 
@@ -88,9 +87,12 @@ public class BusEditController {
 		bus.setDateOfBuy(date);
 		bus.setClassRate(Float.valueOf(txtCategory.getText()));
 		bus.setBusModelId(comboBoxModel.selectionModelProperty().get().getSelectedIndex());
-		
+		bus.setModelName(comboBoxModel.selectionModelProperty().get().getSelectedItem());
         okClicked = true;
-        mainApp.insertBus(bus);
+        if(bus.getBusId() == -1)
+        	mainApp.insertBus(bus);
+        else
+        	mainApp.editBus(bus);
         mainApp.showBusOverview();
     }
 	

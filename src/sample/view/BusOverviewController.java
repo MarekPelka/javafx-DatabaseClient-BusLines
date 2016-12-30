@@ -75,7 +75,6 @@ public class BusOverviewController {
         Bus tempBus = new Bus();
         boolean okClicked = mainApp.showBusEditDialog(tempBus);
         if (okClicked) {
-            mainApp.getBusData().add(tempBus);
             tableBus.setItems(mainApp.getBusData());
         }
     }
@@ -94,8 +93,8 @@ public class BusOverviewController {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initOwner(mainApp.getPrimaryStage());
             alert.setTitle("No Selection");
-            alert.setHeaderText("No Drive Selected");
-            alert.setContentText("Please select a drive in the table.");
+            alert.setHeaderText("No Bus Selected");
+            alert.setContentText("Please select a bus in the table.");
 
             alert.showAndWait();
         }
@@ -105,7 +104,6 @@ public class BusOverviewController {
     private void handleDeleteBus() {
         int selectedIndex = tableBus.getSelectionModel().getSelectedIndex();
         Bus selectedBus = tableBus.getSelectionModel().getSelectedItem();
-        //tableDrive.getItems().get(selectedIndex);
         if (selectedIndex >= 0) {
         	tableBus.getItems().remove(selectedIndex);
         	mainApp.deleteBus(selectedBus);
@@ -114,8 +112,8 @@ public class BusOverviewController {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initOwner(mainApp.getPrimaryStage());
             alert.setTitle("No Selection");
-            alert.setHeaderText("No Drive Selected");
-            alert.setContentText("Please select a drive in the table.");
+            alert.setHeaderText("No Bus Selected");
+            alert.setContentText("Please select a bus in the table.");
 
             alert.showAndWait();
         }

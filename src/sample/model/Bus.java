@@ -130,6 +130,10 @@ public class Bus {
 		return busModelName;
 	}
 	
+	public void setModelName(String modelName) {
+		this.busModelName.set(modelName);
+	}
+	
 	public String getModelName() {
 		return busModelName.get();
 	}

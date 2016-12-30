@@ -83,30 +83,14 @@ public class DriveOverviewController {
 
     }
 
-    @FXML
-    private void handleDeleteDrive() {
-        int selectedIndex = tableDrive.getSelectionModel().getSelectedIndex();
-        //tableDrive.getItems().get(selectedIndex);
-        if (selectedIndex >= 0) {
-            tableDrive.getItems().remove(selectedIndex);
-        } else {
-            // Nothing selected.
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initOwner(mainApp.getPrimaryStage());
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Drive Selected");
-            alert.setContentText("Please select a drive in the table.");
-
-            alert.showAndWait();
-        }
-    }
+   
 
     @FXML
     private void handleNewDrive() {
         Drive tempDrive = new Drive();
         boolean okClicked = mainApp.showDriveEditDialog(tempDrive);
         if (okClicked) {
-            mainApp.getDriveData().add(tempDrive);
+        	tableDrive.setItems(mainApp.getDriveData());
         }
     }
 
@@ -123,6 +107,25 @@ public class DriveOverviewController {
                 showDriveDetails(selectedDrive);
             }
 
+        } else {
+            // Nothing selected.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(mainApp.getPrimaryStage());
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Drive Selected");
+            alert.setContentText("Please select a drive in the table.");
+
+            alert.showAndWait();
+        }
+    }
+    
+    @FXML
+    private void handleDeleteDrive() {
+        int selectedIndex = tableDrive.getSelectionModel().getSelectedIndex();
+        Drive selectedDrive = tableDrive.getSelectionModel().getSelectedItem();
+        if (selectedIndex >= 0) {
+            tableDrive.getItems().remove(selectedIndex);
+            mainApp.deleteDrive(selectedDrive);
         } else {
             // Nothing selected.
             Alert alert = new Alert(Alert.AlertType.WARNING);

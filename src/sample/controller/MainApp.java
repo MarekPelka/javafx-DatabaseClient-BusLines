@@ -286,9 +286,26 @@ public class MainApp extends Application {
 		}
 	}
 	
+	public void insertDrive(Drive drive){
+		dbh.insertDrive(drive);
+		driveData.add(drive);
+	}
+	
+	public void editDrive(Drive drive) {
+		dbh.updateDrive(drive);
+	}
+	
+	public void deleteDrive(Drive drive) {
+		dbh.deleteDrive(drive);
+	}
+	
 	public void insertBus(Bus bus){
 		dbh.insertBus(bus);
 		busData.add(bus);
+	}
+	
+	public void editBus(Bus bus) {
+		dbh.updateBus(bus);
 	}
 	
 	public void deleteBus(Bus bus) {
