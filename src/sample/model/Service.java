@@ -8,22 +8,22 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by Marek on 2016-12-28.
  */
-public class Services {
+public class Service {
 
     private final IntegerProperty id;
     private final StringProperty operation;
     private final StringProperty importance;
 
-    public Services(){this(null);}
+    public Service(){this(null);}
 
-    public Services(String operation)
+    public Service(String operation)
     {
         this.id = new SimpleIntegerProperty(0);
         this.operation = new SimpleStringProperty(operation);
         this.importance = new SimpleStringProperty("");
     }
 
-    public Services(int id, String operation, String importance)
+    public Service(int id, String operation, String importance)
     {
         this.id = new SimpleIntegerProperty(id);
         this.operation = new SimpleStringProperty(operation);

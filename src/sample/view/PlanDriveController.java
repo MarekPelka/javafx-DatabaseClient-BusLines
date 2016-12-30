@@ -51,7 +51,6 @@ public class PlanDriveController {
     private Stage dialogStage;
     private Drive drive;
     private boolean okClicked = false;
-    private List<IntermediateDrive> driveInProgres;
 
     @FXML
     private void initialize() {
@@ -141,6 +140,7 @@ public class PlanDriveController {
                 drive.setDistance(0);
                 drive.setTime(0);
                 drive.setPrice(0);
+                columnPossibleStops.setText("Next station");
             } else if ((drive.getListOfIntermediateDrive() == null || drive.getListOfIntermediateDrive().isEmpty())) {
                 List<IntermediateDrive> temp = new ArrayList<>();
                 temp.add(tablePossibleStops.getSelectionModel().selectedItemProperty().get());
@@ -182,6 +182,7 @@ public class PlanDriveController {
             textDriveStart.setText("");
             tablePossibleStops.setItems(mainApp.getIntermediateDrivesData());
             columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityFromProperty());
+            columnPossibleStops.setText("First station");
             return;
         }
 

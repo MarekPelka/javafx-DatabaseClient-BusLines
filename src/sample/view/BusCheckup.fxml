@@ -33,10 +33,10 @@
                         <Label text="Service " GridPane.rowIndex="4" />
                         <ChoiceBox fx:id="choiceBoxBus" prefHeight="31.0" prefWidth="290.0" GridPane.columnIndex="1" />
                         <ChoiceBox fx:id="choiceBoxService" prefHeight="31.0" prefWidth="239.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Button mnemonicParsing="false" text="+" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Button onAction="#handleServiceAdding" mnemonicParsing="false" text="+" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                         <TextField fx:id="textFieldMileage" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="Mileage" GridPane.rowIndex="2" />
-                        <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="308.0" text="Check" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Button onAction="#handleCheck"  mnemonicParsing="false" prefHeight="33.0" prefWidth="308.0" text="Check" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Button mnemonicParsing="false" onAction="#busDetails" text="Details" GridPane.columnIndex="2" />
                         <TextField fx:id="textFieldAge" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>

@@ -31,7 +31,7 @@ public class MainApp extends Application {
 	private ObservableList<Bus> busData = FXCollections.observableArrayList();
 	private ObservableList<Person> freeDrivers = FXCollections.observableArrayList();
 	private ObservableList<Person> freeHostess = FXCollections.observableArrayList();
-	private ObservableList<Services> services = FXCollections.observableArrayList();
+	private ObservableList<Service> services = FXCollections.observableArrayList();
 	private ObservableList<BusModel> busModelData = FXCollections.observableArrayList();
 	private DataBaseHandler dbh;
 
@@ -253,7 +253,7 @@ public class MainApp extends Application {
 		return busModelData;
 	}
 
-	public ObservableList<Services> getService() {
+	public ObservableList<Service> getService() {
 		return services;
 	}
 
@@ -311,5 +311,10 @@ public class MainApp extends Application {
 	public void deleteBus(Bus bus) {
 		dbh.deleteBus(bus);
 	}
-
+	
+	public ObservableList<Service> getServicesFromPlan(Bus bus, int age, int mileage) {
+		ObservableList<Service> servicesFromPlan = FXCollections.observableArrayList();
+		servicesFromPlan.addAll(dbh.getServicesFromPlan(bus, age, mileage));
+		return servicesFromPlan;
+	}
 }

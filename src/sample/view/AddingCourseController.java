@@ -41,8 +41,6 @@ public class AddingCourseController {
     private Button addHostessBtn;
     @FXML
     private ChoiceBox<String> choiceBoxDrive;
-    @FXML
-    private ChoiceBox choiceBoxDate;
     
     @FXML
     private DatePicker datePicker;

@@ -7,7 +7,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import sample.controller.MainApp;
 import sample.model.Bus;
-import sample.model.Drive;
 
 /**
  * Created by Marek on 2016-12-26.
