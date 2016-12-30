@@ -10,7 +10,7 @@ import java.sql.Date;
 public class Bus {
 
     private final int busId;  
-    private final int busModelId;
+    private final IntegerProperty busModelId;
     private Date dateOfBuy;
     private final StringProperty licensePlate;
     private final StringProperty sereialNumber;
@@ -23,7 +23,7 @@ public class Bus {
 
     public Bus(String licensePlate){
         this.licensePlate = new SimpleStringProperty(licensePlate);
-        this.busModelId = -1;
+        this.busModelId = new SimpleIntegerProperty(-1);
         this.busId = -1;
         this.dateOfBuy = new Date(0); 
         this.sereialNumber = new SimpleStringProperty("null");
@@ -37,7 +37,7 @@ public class Bus {
     		int mileage, float classRate,String modelName){
 
         this.busId = id;
-        this.busModelId = busModelId;
+        this.busModelId = new SimpleIntegerProperty(busModelId);
         this.dateOfBuy = new Date(date.getTime());
         this.licensePlate = new SimpleStringProperty(licensePlate);
         this.sereialNumber = new SimpleStringProperty(serialNumber);
@@ -79,7 +79,11 @@ public class Bus {
     }
 
     public int getBusModelId() {
-        return busModelId;
+        return busModelId.get();
+    }
+    
+    public void setBusModelId(int busModelId) {
+    	this.busModelId.set(busModelId);
     }
 
     public Date getDateOfBuy() {

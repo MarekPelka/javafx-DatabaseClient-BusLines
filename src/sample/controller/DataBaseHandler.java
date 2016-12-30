@@ -7,13 +7,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.Provider;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import consts.BusConsts;
 import consts.BusModelConsts;
@@ -408,5 +411,56 @@ public class DataBaseHandler {
 		}
 
 		return result;
+	}
+	
+	
+	/** INSERT */
+	public void insertBus(Bus bus) {
+		String query = "INSERT INTO " + "BUSES" + "(BUS_ID,BUS_MODEL_ID,BOUGHT_TIME,LICENSE_PLATE,"
+				+ "SERIAL_NUMBER,SEATS_NUMBER,MILEAGE,CLASS_RATE) " + "VALUES (BUS_SEQ.NEXTVAL,?,?,?,?,?,?,?)";
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			int counter = 1;
+			statement.setInt(counter++, bus.getBusModelId());
+			statement.setDate(counter++, bus.getDateOfBuy());
+			statement.setString(counter++, bus.getLicensePlate());
+			statement.setString(counter++, bus.getSereialNumber());
+			statement.setInt(counter++, bus.getSeats());
+			statement.setInt(counter++, bus.getMileage());
+			statement.setFloat(counter++, bus.getClassRate());
+			statement.executeUpdate();
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Inserting bus failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
+	}
+	
+	public void deleteBus(Bus bus) {
+		String query = "delete from BUSES where BUS_ID=?";
+		List<BusModel> result = new ArrayList<>();
+		Connection c = null;
+		try
+		{
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			statement.setInt(1, bus.getBusId());
+			statement.executeUpdate();
+		}
+		catch (SQLException ex)
+		{
+			System.err.println("Deleting bus failed.\n" + ex.getSQLState());
+		}
+		finally
+		{
+			endConnection(c);
+		}
 	}
 }

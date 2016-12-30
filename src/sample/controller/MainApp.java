@@ -285,5 +285,14 @@ public class MainApp extends Application {
 			return false;
 		}
 	}
+	
+	public void insertBus(Bus bus){
+		dbh.insertBus(bus);
+		busData.add(bus);
+	}
+	
+	public void deleteBus(Bus bus) {
+		dbh.deleteBus(bus);
+	}
 
 }

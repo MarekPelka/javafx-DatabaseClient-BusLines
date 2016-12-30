@@ -41,7 +41,7 @@ public class BusEditController {
 	private MainApp mainApp;
 	private Bus bus;
 	
-	private boolean okClicked;
+	private boolean okClicked = false;
 	
 	 @FXML
     private void initialize() {
@@ -87,8 +87,10 @@ public class BusEditController {
 		Date date = new Date(c.getTimeInMillis());
 		bus.setDateOfBuy(date);
 		bus.setClassRate(Float.valueOf(txtCategory.getText()));
+		bus.setBusModelId(comboBoxModel.selectionModelProperty().get().getSelectedIndex());
 		
         okClicked = true;
+        mainApp.insertBus(bus);
         mainApp.showBusOverview();
     }
 	

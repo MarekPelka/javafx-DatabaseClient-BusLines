@@ -76,6 +76,7 @@ public class BusOverviewController {
         boolean okClicked = mainApp.showBusEditDialog(tempBus);
         if (okClicked) {
             mainApp.getBusData().add(tempBus);
+            tableBus.setItems(mainApp.getBusData());
         }
     }
     
@@ -103,9 +104,11 @@ public class BusOverviewController {
     @FXML
     private void handleDeleteBus() {
         int selectedIndex = tableBus.getSelectionModel().getSelectedIndex();
+        Bus selectedBus = tableBus.getSelectionModel().getSelectedItem();
         //tableDrive.getItems().get(selectedIndex);
         if (selectedIndex >= 0) {
         	tableBus.getItems().remove(selectedIndex);
+        	mainApp.deleteBus(selectedBus);
         } else {
             // Nothing selected.
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -117,4 +120,5 @@ public class BusOverviewController {
             alert.showAndWait();
         }
     }
+   
 }
