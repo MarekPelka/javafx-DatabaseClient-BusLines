@@ -13,21 +13,25 @@ public class Service {
     private final IntegerProperty id;
     private final StringProperty operation;
     private final StringProperty importance;
-
+    private final StringProperty doneServiceOptionalDate;
     public Service(){this(null);}
 
     public Service(String operation)
     {
-        this.id = new SimpleIntegerProperty(0);
-        this.operation = new SimpleStringProperty(operation);
-        this.importance = new SimpleStringProperty("");
+    	this(-1,operation,null,null);
     }
 
     public Service(int id, String operation, String importance)
     {
-        this.id = new SimpleIntegerProperty(id);
+    	this(id,operation,importance,null);
+    }
+    
+    public Service(int id, String operation, String importance, String doneServiceOptionalDate) 
+    {
+    	this.id = new SimpleIntegerProperty(id);
         this.operation = new SimpleStringProperty(operation);
         this.importance = new SimpleStringProperty(importance);
+        this.doneServiceOptionalDate = new SimpleStringProperty(doneServiceOptionalDate);
     }
 
     public int getId() {
@@ -65,4 +69,12 @@ public class Service {
     public void setImportance(String importance) {
         this.importance.set(importance);
     }
+
+	public StringProperty doneServiceOptionalDateProperty() {
+		return doneServiceOptionalDate;
+	}
+	
+	public String getDoneServiceOptionalDate () {
+		return doneServiceOptionalDate.get();
+	}
 }

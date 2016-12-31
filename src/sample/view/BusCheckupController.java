@@ -29,6 +29,11 @@ public class BusCheckupController {
     private TableColumn<Service, String> columnServices;
 
     @FXML
+    private TableView<Service> tableDoneServices;
+    @FXML
+    private TableColumn<Service, String> columnDoneServices;
+    
+    @FXML
     private ChoiceBox<Bus> choiceBoxBus;
     @FXML
     private TextField textFieldAge;
