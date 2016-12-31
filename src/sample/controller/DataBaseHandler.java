@@ -219,7 +219,7 @@ public class DataBaseHandler {
 	
 	/** Getting all data of done  services with date for given bus */
 	public List<Service> getServiceHistory(Bus bus) {
-		String query = "select s.SERVICE_ID, s.OPERATION, s.MEANINGNESS, sbp.SERVICE_DATE"
+		String query = "select s.SERVICE_ID, s.OPERATION, s.MEANINGNESS, sbp.SERVICE_DATE, sbp.MILEAGE_THIS_TIME"
 				+ " from SERVICES_BOOK_POSITIONS sbp "
 				+ "inner join SERVICE_ACCOMPLISHMENTS sa on sa.SERVICES_BOOK_POSITION_ID=sbp.SERVICES_BOOK_POSITION_ID "
 				+ "inner join SERVICES s on s.SERVICE_ID=sa.SERVICE_ID where BUS_ID=" + bus.getBusId();
@@ -234,7 +234,8 @@ public class DataBaseHandler {
 				Service service = new Service(resultSet.getInt(ServiceConsts.ID),
 						resultSet.getString(ServiceConsts.OPERATION),
 						resultSet.getString(ServiceConsts.MEANINGNESS),
-						resultSet.getDate(ServiceConsts.OPTIONAL_DATE));
+						resultSet.getDate(ServiceConsts.OPTIONAL_DATE),
+						resultSet.getInt(ServiceConsts.OPTIONAL_MILEAGE));
 				result.add(service);
 			}
 		} catch (SQLException ex) {

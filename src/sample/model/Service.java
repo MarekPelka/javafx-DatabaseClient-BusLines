@@ -16,24 +16,38 @@ public class Service {
     private final StringProperty operation;
     private final StringProperty importance;
     private Date doneServiceOptionalDate;
+    private int doneMileageOptionalValue;
+    private int kmToDo;
+    private int daysToDo;
     public Service(){this(null);}
 
     public Service(String operation)
     {
-    	this(-1,operation,null,null);
+    	this(-1,operation,null,null,-1);
     }
 
     public Service(int id, String operation, String importance)
     {
-    	this(id,operation,importance,null);
+    	this(id,operation,importance,null,-1);
     }
     
-    public Service(int id, String operation, String importance, Date doneServiceOptionalDate) 
+    public Service(int id, String operation, String importance, Date doneServiceOptionalDate,int doneMileageOptionalValue) 
     {
     	this.id = new SimpleIntegerProperty(id);
         this.operation = new SimpleStringProperty(operation);
         this.importance = new SimpleStringProperty(importance);
         this.doneServiceOptionalDate = doneServiceOptionalDate;
+        this.doneMileageOptionalValue = doneMileageOptionalValue;
+    }
+    
+    public Service(int id, String operation, String importance, Date doneServiceOptionalDate,int kmToDo, int daysToDo) 
+    {
+    	this.id = new SimpleIntegerProperty(id);
+        this.operation = new SimpleStringProperty(operation);
+        this.importance = new SimpleStringProperty(importance);
+        this.doneServiceOptionalDate = doneServiceOptionalDate;
+        this.kmToDo = kmToDo;
+        this.daysToDo = daysToDo;
     }
 
     public int getId() {
@@ -74,5 +88,33 @@ public class Service {
 	
 	public Date getDoneServiceOptionalDate () {
 		return doneServiceOptionalDate;
+	}
+	
+	public void setDoneServiceOptionalDate (Date date) {
+		this.doneServiceOptionalDate = date;
+	}
+
+	public int getKmToDo() {
+		return kmToDo;
+	}
+
+	public void setKmToDo(int kmToDo) {
+		this.kmToDo = kmToDo;
+	}
+
+	public int getDaysToDo() {
+		return daysToDo;
+	}
+
+	public void setDaysToDo(int daysToDo) {
+		this.daysToDo = daysToDo;
+	}
+
+	public int getDoneMileageOptionalValue() {
+		return doneMileageOptionalValue;
+	}
+
+	public void setDoneMileageOptionalValue(int doneMileageOptionalValue) {
+		this.doneMileageOptionalValue = doneMileageOptionalValue;
 	}
 }

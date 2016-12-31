@@ -47,9 +47,13 @@ public class BusCheckupController {
 
     @FXML
     private void initialize() {
-    	columnServices.setCellValueFactory(cellData -> cellData.getValue().operationProperty());
-    	columnDoneServices.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDoneServiceOptionalDate()
-    			+ " # " + cellData.getValue().getOperation()));
+    	columnServices.setCellValueFactory(cellData ->  new SimpleStringProperty(cellData.getValue().getOperation() + 
+    			" (after:" + cellData.getValue().getDoneServiceOptionalDate() + " days )" + 
+    			" (after:" + cellData.getValue().getDoneMileageOptionalValue() + " km )"));
+    	columnDoneServices.setCellValueFactory(cellData -> new SimpleStringProperty(
+    			"Date: " + cellData.getValue().getDoneServiceOptionalDate()
+    			+"Mileage: " + cellData.getValue().getDoneMileageOptionalValue()
+    			+"Operation: "+ cellData.getValue().getOperation()));
         choiceBoxBus.selectionModelProperty().addListener(
                 (observable, oldValue, newValue) -> showBusDetails(newValue)
         );
@@ -118,9 +122,24 @@ public class BusCheckupController {
     
     @FXML
     private void handleCheck() {
-    	tableServices.setItems(mainApp.getServicesFromPlan(choiceBoxBus.getSelectionModel().getSelectedItem(), 
+    	ObservableList<Service> tmpNeeded =mainApp.getServicesFromPlan(choiceBoxBus.getSelectionModel().getSelectedItem(), 
     			Integer.valueOf(textFieldAge.getText().substring(0,textFieldAge.getText().indexOf(' '))),
-    			Integer.valueOf(textFieldMileage.getText())));
+    			Integer.valueOf(textFieldMileage.getText()));
+    	ObservableList<Service> tmpDone  = mainApp.getServiceHistory(choiceBoxBus.getSelectionModel().getSelectedItem());
+    	
+    	for(Service sn : tmpNeeded) {
+    		for(Service sd : tmpDone) {
+    			if(sn.getOperation().equals(sd.getOperation())) {
+    				Calendar cal = Calendar.getInstance();
+    		        cal.setTimeInMillis(sd.getDoneServiceOptionalDate().getTime());
+    				LocalDate todayDate = LocalDate.now();
+    	            LocalDate doneDate = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+    	            long periodDays = ChronoUnit.DAYS.between(doneDate, todayDate);
+    	            sn.setDaysToDo((int)periodDays);
+    			}
+    		}
+    	}
+    	tableServices.setItems(tmpNeeded);
     }
     
     @FXML 
