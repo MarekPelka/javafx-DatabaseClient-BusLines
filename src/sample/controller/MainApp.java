@@ -317,4 +317,10 @@ public class MainApp extends Application {
 		servicesFromPlan.addAll(dbh.getServicesFromPlan(bus, age, mileage));
 		return servicesFromPlan;
 	}
+	
+	public ObservableList<Service> getServiceHistory(Bus bus) {
+		ObservableList<Service> serviceHistory = FXCollections.observableArrayList();
+		serviceHistory.addAll(dbh.getServiceHistory(bus));
+		return serviceHistory;
+	}
 }

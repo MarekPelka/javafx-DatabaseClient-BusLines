@@ -1,5 +1,7 @@
 package sample.model;
 
+import java.sql.Date;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,7 +15,7 @@ public class Service {
     private final IntegerProperty id;
     private final StringProperty operation;
     private final StringProperty importance;
-    private final StringProperty doneServiceOptionalDate;
+    private Date doneServiceOptionalDate;
     public Service(){this(null);}
 
     public Service(String operation)
@@ -26,12 +28,12 @@ public class Service {
     	this(id,operation,importance,null);
     }
     
-    public Service(int id, String operation, String importance, String doneServiceOptionalDate) 
+    public Service(int id, String operation, String importance, Date doneServiceOptionalDate) 
     {
     	this.id = new SimpleIntegerProperty(id);
         this.operation = new SimpleStringProperty(operation);
         this.importance = new SimpleStringProperty(importance);
-        this.doneServiceOptionalDate = new SimpleStringProperty(doneServiceOptionalDate);
+        this.doneServiceOptionalDate = doneServiceOptionalDate;
     }
 
     public int getId() {
@@ -69,12 +71,8 @@ public class Service {
     public void setImportance(String importance) {
         this.importance.set(importance);
     }
-
-	public StringProperty doneServiceOptionalDateProperty() {
-		return doneServiceOptionalDate;
-	}
 	
-	public String getDoneServiceOptionalDate () {
-		return doneServiceOptionalDate.get();
+	public Date getDoneServiceOptionalDate () {
+		return doneServiceOptionalDate;
 	}
 }

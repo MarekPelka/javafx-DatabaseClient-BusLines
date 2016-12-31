@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -47,6 +48,8 @@ public class BusCheckupController {
     @FXML
     private void initialize() {
     	columnServices.setCellValueFactory(cellData -> cellData.getValue().operationProperty());
+    	columnDoneServices.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDoneServiceOptionalDate()
+    			+ " # " + cellData.getValue().getOperation()));
         choiceBoxBus.selectionModelProperty().addListener(
                 (observable, oldValue, newValue) -> showBusDetails(newValue)
         );
@@ -100,6 +103,7 @@ public class BusCheckupController {
             long periodMonths = ChronoUnit.MONTHS.between(birthdayOfBus, today);
             textFieldAge.setText(periodMonths + " months");
             textFieldMileage.setText(String.valueOf(selectedBus.getMileage()));
+            tableDoneServices.setItems(mainApp.getServiceHistory(selectedBus));
         } else {
             // Nothing selected.
             Alert alert = new Alert(Alert.AlertType.WARNING);
