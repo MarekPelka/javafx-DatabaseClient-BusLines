@@ -189,16 +189,18 @@ public class DataBaseHandler {
 	
 	/** Getting all data of services where mileage or age is greater than needed in plan service */
 	public List<Service> getServicesFromPlan(Bus bus,int ageInMonths, int mileage) {
-		String query = "select * from SERVICES where SERVICE_ID in ("
-				+ "select SERVICE_ID from POSITION_REQUIREMENTS where SERVICE_PLAN_POSITION_ID in ("
-				+ "select SERVICE_PLAN_POSITION_ID from SERVICE_PLAN_POSITIONS where MONTHS_TO_SERVICE<? OR MILEAGE_KM<?"
-				+ "))";
+		String query =
+				"select distinct s.SERVICE_ID,s.OPERATION,s.MEANINGNESS,spp.MILEAGE_KM,spp.MONTHS_TO_SERVICE from SERVICES s "
+				+"inner join  POSITION_REQUIREMENTS pr on s.SERVICE_ID = pr.SERVICE_ID "
+				+"inner join SERVICE_PLAN_POSITIONS spp on spp.SERVICE_PLAN_POSITION_ID = pr.SERVICE_PLAN_POSITION_ID  "
+				+"where spp.BUS_MODEL_ID=? AND (spp.MILEAGE_KM < ? OR spp.MONTHS_TO_SERVICE < ?) ";
 		List<Service> result = new ArrayList<>();
 		Connection c = null;
 		try {
 			c = createConnection();
 			PreparedStatement statement = c.prepareStatement(query);
 			int counter = 1;
+			statement.setInt(counter++, bus.getBusModelId());
 			statement.setInt(counter++, ageInMonths);
 			statement.setInt(counter++, mileage);
 			ResultSet resultSet = statement.executeQuery();
@@ -206,7 +208,9 @@ public class DataBaseHandler {
 			while (resultSet.next()) {
 				Service service = new Service(resultSet.getInt(ServiceConsts.ID),
 						resultSet.getString(ServiceConsts.OPERATION),
-						resultSet.getString(ServiceConsts.MEANINGNESS));
+						resultSet.getString(ServiceConsts.MEANINGNESS),
+						resultSet.getInt(ServiceConsts.NEEDED_MILEAGE),
+						resultSet.getInt(ServiceConsts.NEEDED_MONTH));
 				result.add(service);
 			}
 		} catch (SQLException ex) {

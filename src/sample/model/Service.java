@@ -17,8 +17,12 @@ public class Service {
     private final StringProperty importance;
     private Date doneServiceOptionalDate;
     private int doneMileageOptionalValue;
+    
+    
     private int kmToDo;
-    private int daysToDo;
+    private int monthsToDo;
+    
+    
     public Service(){this(null);}
 
     public Service(String operation)
@@ -40,14 +44,23 @@ public class Service {
         this.doneMileageOptionalValue = doneMileageOptionalValue;
     }
     
-    public Service(int id, String operation, String importance, Date doneServiceOptionalDate,int kmToDo, int daysToDo) 
+    public Service(int id, String operation, String importance, Date doneServiceOptionalDate,int kmToDo, int monthsToDo) 
     {
     	this.id = new SimpleIntegerProperty(id);
         this.operation = new SimpleStringProperty(operation);
         this.importance = new SimpleStringProperty(importance);
         this.doneServiceOptionalDate = doneServiceOptionalDate;
         this.kmToDo = kmToDo;
-        this.daysToDo = daysToDo;
+        this.monthsToDo = monthsToDo;
+    }
+    
+    public Service(int id, String operation, String importance,int kmToDo, int monthsToDo) 
+    {
+    	this.id = new SimpleIntegerProperty(id);
+        this.operation = new SimpleStringProperty(operation);
+        this.importance = new SimpleStringProperty(importance);
+        this.kmToDo = kmToDo;
+        this.monthsToDo = monthsToDo;
     }
 
     public int getId() {
@@ -102,12 +115,12 @@ public class Service {
 		this.kmToDo = kmToDo;
 	}
 
-	public int getDaysToDo() {
-		return daysToDo;
+	public int getmonthsToDo() {
+		return monthsToDo;
 	}
 
-	public void setDaysToDo(int daysToDo) {
-		this.daysToDo = daysToDo;
+	public void setmonthsToDo(int monthsToDo) {
+		this.monthsToDo = monthsToDo;
 	}
 
 	public int getDoneMileageOptionalValue() {
