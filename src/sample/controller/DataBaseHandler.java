@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -583,5 +584,51 @@ public class DataBaseHandler {
 		}
 
 		return busModel;
+	}
+	
+	
+	public void insertServicesIntoBusServiceBook(Bus bus, List<Service> services, Date serviceDate, int mileageThisTime,
+			String state, String carServiceAddress) {
+		String query = "insert into SERVICES_BOOK_POSITIONS(SERVICES_BOOK_POSITION_ID,BUS_ID,SERVICE_DATE,MILEAGE_THIS_TIME,"
+				+ "STATE,CAR_SERVICE_ADDRESS) values(SERVICES_BOOK_POSITION_SEQ.NEXTVAL,?,?,?,?,?)";
+		Connection c = null;
+		try {
+			c = createConnection();
+			PreparedStatement pstatement = c.prepareStatement(query);
+			int counter = 1;
+			pstatement.setInt(counter++, bus.getBusId());
+			pstatement.setDate(counter++, serviceDate);
+			pstatement.setInt(counter++, mileageThisTime);
+			pstatement.setString(counter++, state);
+			pstatement.setString(counter++, carServiceAddress);
+			pstatement.executeUpdate();
+			
+			Statement stmt= c.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT SERVICES_BOOK_POSITION_SEQ.CURRVAL FROM dual");
+			long generatedId = -1;
+			if ( rs!=null && rs.next() )
+				generatedId =  	rs.getInt(1);
+			for(Service service : services)
+				insertServicesAccomplishment(generatedId,service);
+		}catch (SQLException ex) {
+			System.err.println("Inserting service book position  failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+	}
+
+	private void insertServicesAccomplishment(long positionId,Service service) {
+		String query = "insert into SERVICE_ACCOMPLISHMENTS(SERVICES_BOOK_POSITION_ID,SERVICE_ID) VALUES("
+				+ positionId + "," + service.getId() +")";
+		Connection c = null;
+		try {
+			c = createConnection();
+			Statement statement = c.createStatement();
+			statement.executeUpdate(query);
+		} catch (SQLException ex) {
+			System.err.println("Inserting  service accomplishment failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
 	}
 }

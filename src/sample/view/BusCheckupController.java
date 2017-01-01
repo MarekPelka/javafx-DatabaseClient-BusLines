@@ -1,5 +1,6 @@
 package sample.view;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
@@ -11,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -42,6 +44,10 @@ public class BusCheckupController {
     private TextField textFieldMileage;
     @FXML
     private ChoiceBox<String> choiceBoxService;
+    @FXML
+    private DatePicker dateOfService;
+    @FXML 
+    private TextField carServiceData;
 
     private MainApp mainApp;
 
@@ -146,5 +152,33 @@ public class BusCheckupController {
     private void handleServiceAdding() {
     	ObservableList<Service> tmp = tableServices.getItems();
     	tmp.add(mainApp.getService().get(choiceBoxService.getSelectionModel().getSelectedIndex()));
+    }
+    
+    @FXML 
+    private void handleServicing() {
+    	ObservableList<Service> toAdd = tableServices.getItems();
+    	String serviceData = carServiceData.getText();
+    	LocalDate serviceLocalDate = dateOfService.getValue();
+		Calendar c =  Calendar.getInstance();
+		c.set(serviceLocalDate.getYear(), serviceLocalDate.getMonthValue()-1, serviceLocalDate.getDayOfMonth());
+		Date serviceDate = new Date(c.getTimeInMillis());
+		mainApp.insertServiceBookPosition(choiceBoxBus.getSelectionModel().getSelectedItem(),
+				toAdd, serviceDate, Integer.valueOf(textFieldMileage.getText()), "COMPLETE", serviceData);
+    }
+    
+    @FXML
+    private void handleServiceDelete() {
+    	 int selectedIndex = tableServices.getSelectionModel().getSelectedIndex();
+    	 if (selectedIndex >= 0) {
+    		 tableServices.getItems().remove(selectedIndex);
+         } else {
+             // Nothing selected.
+             Alert alert = new Alert(Alert.AlertType.WARNING);
+             alert.initOwner(mainApp.getPrimaryStage());
+             alert.setTitle("No Selection");
+             alert.setHeaderText("No Service Selected");
+             alert.setContentText("Please select a service in the table.");
+             alert.showAndWait();
+         }
     }
 }

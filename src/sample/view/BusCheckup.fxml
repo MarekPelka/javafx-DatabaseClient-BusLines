@@ -25,13 +25,19 @@
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="Bus" />
                         <Label text="Age" GridPane.rowIndex="1" />
                         <Label prefHeight="42.0" prefWidth="96.0" text="Service plan for model" wrapText="true" GridPane.rowIndex="3" />
                         <Label text="Service " GridPane.rowIndex="4" />
+                        <Label prefHeight="42.0" prefWidth="96.0" text="Day of servicing " wrapText="true" GridPane.rowIndex="5" />
+                        <Label prefHeight="42.0" prefWidth="96.0" text="Car service contact data" wrapText="true" GridPane.rowIndex="6" />
                         <ChoiceBox fx:id="choiceBoxBus" prefHeight="31.0" prefWidth="290.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="carServiceData" prefHeight="31.0" prefWidth="239.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <DatePicker fx:id="dateOfService" prefHeight="31.0" prefWidth="239.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <ChoiceBox fx:id="choiceBoxService" prefHeight="31.0" prefWidth="239.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Button onAction="#handleServiceAdding" mnemonicParsing="false" text="+" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                         <TextField fx:id="textFieldMileage" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -41,7 +47,7 @@
                         <TextField fx:id="textFieldAge" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
-                  <Button layoutX="220.0" layoutY="242.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="168.0" text="Sent bus" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                  <Button onAction="#handleServicing" layoutX="220.0" layoutY="242.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="168.0" text="Service Bus" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="-Infinity" maxWidth="Infinity" prefHeight="140.0" prefWidth="500.0">
@@ -74,7 +80,7 @@
                      </columnResizePolicy>
                   </TableView>
                </children>
-               <Button layoutX="220.0" layoutY="242.0" GridPane.rowIndex="1" mnemonicParsing="false" prefHeight="33.0" prefWidth="168.0" text="Remove selected" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+               <Button onAction="#handleServiceDelete" layoutX="220.0" layoutY="242.0" GridPane.rowIndex="1" mnemonicParsing="false" prefHeight="33.0" prefWidth="168.0" text="Remove selected" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
               
                 </GridPane>
             </AnchorPane>

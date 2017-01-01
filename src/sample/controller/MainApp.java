@@ -3,6 +3,8 @@ package sample.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.Date;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -322,5 +324,10 @@ public class MainApp extends Application {
 		ObservableList<Service> serviceHistory = FXCollections.observableArrayList();
 		serviceHistory.addAll(dbh.getServiceHistory(bus));
 		return serviceHistory;
+	}
+	
+	public void insertServiceBookPosition(Bus bus, List<Service> services, Date serviceDate,
+			int serviceMileage,String state,String carServiceData) {
+		dbh.insertServicesIntoBusServiceBook(bus, services, serviceDate, serviceMileage, state, carServiceData);
 	}
 }
