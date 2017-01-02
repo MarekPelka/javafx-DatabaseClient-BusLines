@@ -42,7 +42,7 @@ public class MainApp extends Application {
 	}
 
 	private enum tabs {
-		CREATE_COURSE(2), DRIVE_OVERVIEW(0), BUS_OVERVIEW(1), CHECKUP(3);
+		CREATE_COURSE(3), DRIVE_OVERVIEW(0), BUS_OVERVIEW(1), CHECKUP(4), TIMETABLE(2);
 		public int number;
 
 		tabs(int i) {
@@ -69,6 +69,7 @@ public class MainApp extends Application {
 		initTabLayout();
 		showCourseCreation();
 		showDriveOverview();
+		showTimetable();
 		showBusOverview();
 		showBusesCheckup();
 
@@ -143,6 +144,18 @@ public class MainApp extends Application {
 			tabbedLayout.getTabs().get(tabs.BUS_OVERVIEW.number).setContent(busOverview);
 			BusOverviewController controller = loader.getController();
 			controller.setMainApp(this);
+		} catch (IOException e) {
+			exceptionDialog(e);
+		}
+	}
+
+	public void showTimetable() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/view/TimetableOverview.fxml"));
+			AnchorPane timetable = (AnchorPane) loader.load();
+
+			tabbedLayout.getTabs().get(tabs.TIMETABLE.number).setContent(timetable);
+
 		} catch (IOException e) {
 			exceptionDialog(e);
 		}

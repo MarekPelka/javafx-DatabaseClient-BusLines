@@ -55,6 +55,18 @@
     -fx-border-insets: 0 10 0 0;
 }
 
+.table-view .nested-column-header{
+    -fx-size: 14;
+    -fx-border-width: 0 0 0 0;
+    -fx-background-color: transparent;
+    -fx-border-color:
+        transparent
+        transparent
+        derive(-fx-base, 80%)
+        transparent;
+    -fx-border-insets: 0 10 0 0;
+}
+
 .table-view .column-header .label {
     -fx-font-size: 20pt;
     -fx-font-family: "Segoe UI Light";

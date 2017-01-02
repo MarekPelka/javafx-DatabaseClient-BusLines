@@ -8,8 +8,9 @@
    <tabs>
        <Tab text="Drive" />
        <Tab text="Bus" />
+       <Tab text="Timetable" />
        <Tab text="Create Course" />
-       <Tab text="Check Buses">
+       <Tab text="Check Buses" >
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
         </content>
