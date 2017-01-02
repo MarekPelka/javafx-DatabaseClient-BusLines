@@ -101,10 +101,12 @@
 .split-pane:horizontal > .split-pane-divider {
     -fx-border-color: transparent #1d1d1d transparent #1d1d1d;
     -fx-background-color: transparent, derive(#1d1d1d,20%);
+    -fx-padding: 0 0 0 0;
 }
 
 .split-pane {
-    -fx-padding: 0 0 0 0;
+    -fx-padding: 5 0 0 0;
+    -fx-background-color: rgb(255,128,0);
 }
 
 .menu-bar {

@@ -1,8 +1,12 @@
 package sample.view;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -14,8 +18,6 @@ import javafx.stage.Stage;
 import sample.controller.MainApp;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
-
-import java.util.ArrayList;
 
 /**
  * Created by Marek on 2016-12-25.
@@ -100,7 +102,12 @@ public class PlanDriveController {
             this.labelPrice.setText("0");
             this.textDriveStart.setText("");
 
-            tablePossibleStops.setItems(mainApp.getIntermediateDrivesData());
+            Collection<IntermediateDrive> tmp = mainApp.getIntermediateDrivesData().stream()
+            		.collect(Collectors.toMap(IntermediateDrive::getCityFrom, p->p , (p,q) -> p))
+            		.values();
+            ObservableList<IntermediateDrive> tmp2 = tmp.stream()
+            		.collect(Collectors.toCollection(FXCollections::observableArrayList));
+            tablePossibleStops.setItems(tmp2);
             columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityFromProperty());
         }
     }
@@ -180,7 +187,12 @@ public class PlanDriveController {
         {
             drive.setFrom(null);
             textDriveStart.setText("");
-            tablePossibleStops.setItems(mainApp.getIntermediateDrivesData());
+            Collection<IntermediateDrive> tmp = mainApp.getIntermediateDrivesData().stream()
+            		.collect(Collectors.toMap(IntermediateDrive::getCityFrom, p->p , (p,q) -> p))
+            		.values();
+            ObservableList<IntermediateDrive> tmp2 = tmp.stream()
+            		.collect(Collectors.toCollection(FXCollections::observableArrayList));
+            tablePossibleStops.setItems(tmp2);
             columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityFromProperty());
             columnPossibleStops.setText("First station");
             return;
@@ -189,6 +201,7 @@ public class PlanDriveController {
         drive.getListOfIntermediateDrive().remove(tableStops.getItems().get(tableStops.getItems().size() - 1));
         if(drive.getListOfIntermediateDrive().isEmpty())
         {
+        	
             tablePossibleStops.setItems(mainApp.getIntermediateDrivesFromData(drive.getFrom()));
             columnPossibleStops.setCellValueFactory(cellData -> cellData.getValue().cityToProperty());
 

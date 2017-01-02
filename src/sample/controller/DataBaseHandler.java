@@ -254,7 +254,7 @@ public class DataBaseHandler {
 
 	/** Getting all intermediate drives */
 	public List<IntermediateDrive> getIntermediateDrivesData() {
-		String query = "select * from INTERMEDIATE_DRIVES";
+		String query = "select * from INTERMEDIATE_DRIVES ORDER BY INTERMEDIATE_DRIVE_ID";
 		List<IntermediateDrive> result = new ArrayList<>();
 		Connection c = null;
 		try {

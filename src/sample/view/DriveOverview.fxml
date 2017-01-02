@@ -60,7 +60,7 @@
                         <ListView fx:id="listIntermediateDrive" prefHeight="79.0" prefWidth="203.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
-                  <ToolBar layoutX="203.0" layoutY="311.0" styleClass="background" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                  <ToolBar layoutX="203.0" layoutY="311.0" styleClass="background" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="0.0">
                     <items>
                       <Button mnemonicParsing="false" onAction="#handleNewDrive" text="New..." />
                         <Button mnemonicParsing="false" onAction="#handleEditDrive" text="Edit..." />
