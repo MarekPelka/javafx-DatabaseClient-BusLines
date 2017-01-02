@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="300.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.BusEditController">
    <children>
-      <SplitPane dividerPositions="0.24, 0.7533333333333333" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.3" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
@@ -25,7 +25,7 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0" styleClass="background" stylesheets="@application.css">
                <children>
-                  <GridPane stylesheets="@application.css" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0">
+                  <GridPane stylesheets="@application.css" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0">
                      <children>
                         <Label text="License Plate" />
                         <Label text="Class rate" GridPane.rowIndex="1" />
@@ -34,13 +34,13 @@
                         <Label text="Milege" GridPane.rowIndex="4" />
                         <Label text="Serial Number" GridPane.rowIndex="5" />
                         <Label text="Bought date" GridPane.rowIndex="6" />
-                        <TextField fx:id="txtPlate" text="" GridPane.columnIndex="1"  minHeight="0.0" minWidth="0.0"  prefWidth="100.0" />
-                        <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="6"   prefWidth="100.0" minWidth="-Infinity" maxWidth="Infinity" />
-                        <TextField fx:id="txtSerialNumber" text="" GridPane.columnIndex="1" GridPane.rowIndex="5"  minHeight="0.0" minWidth="0.0"  prefWidth="100.0"/>
-                        <TextField fx:id="txtMileage" text="" GridPane.columnIndex="1" GridPane.rowIndex="4" minHeight="0.0" minWidth="0.0"  prefWidth="100.0" />
-                        <TextField fx:id="txtSeats" text="" GridPane.columnIndex="1" GridPane.rowIndex="3"  minHeight="0.0" minWidth="0.0"  prefWidth="100.0"/>
-                        <ComboBox fx:id="comboBoxModel" GridPane.columnIndex="1" GridPane.rowIndex="2"  prefWidth="100.0"  minWidth="-Infinity" maxWidth="Infinity"/>
-                        <TextField fx:id="txtCategory" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"  minHeight="0.0" minWidth="0.0"  prefWidth="100.0"/>
+                        <TextField fx:id="txtPlate" minHeight="0.0" minWidth="0.0" prefWidth="100.0" text="" GridPane.columnIndex="1" />
+                        <DatePicker fx:id="datePicker" maxWidth="Infinity" minWidth="-Infinity" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <TextField fx:id="txtSerialNumber" minHeight="0.0" minWidth="0.0" prefWidth="100.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="txtMileage" minHeight="0.0" minWidth="0.0" prefWidth="100.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="txtSeats" minHeight="0.0" minWidth="0.0" prefWidth="100.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="comboBoxModel" maxWidth="Infinity" minWidth="-Infinity" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="txtCategory" minHeight="0.0" minWidth="0.0" prefWidth="100.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -53,6 +53,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints />
                      </rowConstraints>
                   </GridPane>
                   <Label layoutY="6.0" text="Bus details:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />

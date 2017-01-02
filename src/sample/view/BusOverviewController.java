@@ -66,6 +66,7 @@ public class BusOverviewController {
             labelSeats.setText("");
             labelMileage.setText("");
             labelSerialNumber.setText("");
+            labelBoughtDate.setText("");
         }
     }
     

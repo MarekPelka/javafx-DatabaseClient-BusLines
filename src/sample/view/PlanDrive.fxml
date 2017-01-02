@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="300.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.PlanDriveController">
    <children>
-      <SplitPane dividerPositions="0.24, 0.7533333333333333" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.3, 0.9" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="background">
                <children>
@@ -28,7 +28,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="background">
                <children>
                   <Label layoutX="14.0" layoutY="14.0" text="Create drive:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-                  <SplitPane dividerPositions="0.5" layoutY="38.0" prefHeight="182.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                  <SplitPane dividerPositions="0.5" layoutY="38.0" prefHeight="182.0" prefWidth="300.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
@@ -56,7 +56,7 @@
                   </SplitPane>
                   <Button layoutX="191.0" layoutY="261.0" mnemonicParsing="false" onAction="#addStop" text="Add Stop" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
                   <Button layoutX="14.0" layoutY="261.0" mnemonicParsing="false" onAction="#removeStop" text="Remove Stop" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
-                  <Label layoutX="154.0" layoutY="4.0" text="Drive From: " />
+                  <Label layoutX="154.0" layoutY="4.0" text="Drive From: " AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="5.0" />
                   <Text fx:id="textDriveStart" layoutX="262.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
