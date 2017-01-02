@@ -22,12 +22,14 @@ import consts.DriveConsts;
 import consts.IntermediateDriveConsts;
 import consts.PersonConsts;
 import consts.ServiceConsts;
+import consts.TimeTablePositionConsts;
 import sample.model.Bus;
 import sample.model.BusModel;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
 import sample.model.Person;
 import sample.model.Service;
+import sample.model.TimeTablePosition;
 
 public class DataBaseHandler {
 	/** Packet address for JDBC driver */
@@ -634,5 +636,33 @@ public class DataBaseHandler {
 		} finally {
 			endConnection(c);
 		}
+	}
+
+	public List<TimeTablePosition> getTimeTablePositionfForDrive(int driveId) {
+		String query = "select * from TIME_TABLE_POSITIONS where DRIVE_ID="+ driveId;
+		List<TimeTablePosition> timeTable = new ArrayList<>();
+		Connection c = null;
+		try {
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next()) {
+				TimeTablePosition timetablePosition = new TimeTablePosition(
+						resultSet.getInt(TimeTablePositionConsts.ID),
+						resultSet.getInt(TimeTablePositionConsts.DRIVE_ID),
+						resultSet.getInt(TimeTablePositionConsts.CATEGORY_ID),
+						resultSet.getString(TimeTablePositionConsts.WEEK_DAY),
+						resultSet.getString(TimeTablePositionConsts.LEAVING_HOUR),
+						resultSet.getString(TimeTablePositionConsts.PHONE_NUMBER));
+				timeTable.add(timetablePosition);
+			}
+		} catch (SQLException ex) {
+			System.err.println("Selecting time table positions for drive failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+
+		return timeTable;
 	}
 }

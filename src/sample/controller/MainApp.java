@@ -343,4 +343,8 @@ public class MainApp extends Application {
 			int serviceMileage,String state,String carServiceData) {
 		dbh.insertServicesIntoBusServiceBook(bus, services, serviceDate, serviceMileage, state, carServiceData);
 	}
+
+	public List<TimeTablePosition> getTimeTablePositionsForDrive(int driveId) {
+		return dbh.getTimeTablePositionfForDrive(driveId);
+	}
 }
