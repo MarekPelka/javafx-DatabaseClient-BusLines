@@ -30,12 +30,7 @@ import sample.model.IntermediateDrive;
 import sample.model.Person;
 import sample.model.Service;
 import sample.model.TimeTablePosition;
-import sample.view.AddingCourseController;
-import sample.view.BusCheckupController;
-import sample.view.BusEditController;
-import sample.view.BusOverviewController;
-import sample.view.DriveOverviewController;
-import sample.view.PlanDriveController;
+import sample.view.*;
 
 public class MainApp extends Application {
 
@@ -164,7 +159,8 @@ public class MainApp extends Application {
 			AnchorPane timetable = (AnchorPane) loader.load();
 
 			tabbedLayout.getTabs().get(tabs.TIMETABLE.number).setContent(timetable);
-
+			TimetableOverviewController controller = loader.getController();
+			controller.setMainApp(this);
 		} catch (IOException e) {
 			exceptionDialog(e);
 		}
