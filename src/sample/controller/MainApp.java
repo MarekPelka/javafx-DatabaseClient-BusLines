@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -23,8 +22,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import sample.model.*;
-import sample.view.*;
+import sample.model.Bus;
+import sample.model.BusModel;
+import sample.model.Course;
+import sample.model.Drive;
+import sample.model.IntermediateDrive;
+import sample.model.Person;
+import sample.model.Service;
+import sample.model.TimeTablePosition;
+import sample.view.AddingCourseController;
+import sample.view.BusCheckupController;
+import sample.view.BusEditController;
+import sample.view.BusOverviewController;
+import sample.view.DriveOverviewController;
+import sample.view.PlanDriveController;
 
 public class MainApp extends Application {
 
@@ -33,8 +44,6 @@ public class MainApp extends Application {
 	private TabPane tabbedLayout;
 	private ObservableList<Drive> driveData = FXCollections.observableArrayList();
 	private ObservableList<Bus> busData = FXCollections.observableArrayList();
-	private ObservableList<Person> freeDrivers = FXCollections.observableArrayList();
-	private ObservableList<Person> freeHostess = FXCollections.observableArrayList();
 	private ObservableList<Service> services = FXCollections.observableArrayList();
 	private ObservableList<BusModel> busModelData = FXCollections.observableArrayList();
 	private DataBaseHandler dbh;
@@ -56,8 +65,6 @@ public class MainApp extends Application {
 		dbh = new DataBaseHandler();
 		driveData.addAll(dbh.getAllDrives());
 		busData.addAll(dbh.getAllBuses());
-		freeDrivers.addAll(dbh.getFreeDrivers());
-		freeHostess.addAll(dbh.getFreeHostess());
 		services.addAll(dbh.getServices());
 		busModelData.addAll(dbh.getAllBusModels());
 	}
@@ -274,13 +281,7 @@ public class MainApp extends Application {
 		return services;
 	}
 
-	public ObservableList<Person> getFreeDrivers() {
-		return freeDrivers;
-	}
 
-	public ObservableList<Person> getFreeHostess() {
-		return freeHostess;
-	}
 
 	public boolean showBusEditDialog(Bus bus) {
 		try {
@@ -352,5 +353,17 @@ public class MainApp extends Application {
 
 	public List<Bus> getFreeBuses(Course courseData) {
 		return dbh.getFreeBuses(courseData);
+	}
+	
+	public ObservableList<Person> getFreeDrivers(Course courseData) {
+		return dbh.getFreeDrivers(courseData).stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
+	}
+
+	public ObservableList<Person> getFreeHostess(Course courseData) {
+		return dbh.getFreeHostess(courseData).stream().collect(Collectors.toCollection(FXCollections::observableArrayList));
+	}
+
+	public void insertCourse(Course courseData, List<Person> staff) {
+		dbh.insertCourse(courseData,staff);
 	}
 }

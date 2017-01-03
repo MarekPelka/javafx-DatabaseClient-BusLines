@@ -26,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.DateTimeStringConverter;
 import sample.controller.MainApp;
+import sample.model.Bus;
 import sample.model.Course;
 import sample.model.Drive;
 import sample.model.Person;
@@ -60,35 +61,20 @@ public class AddingCourseController {
     private TextField timePicker;
     @FXML
     private ChoiceBox<String> choiceBoxBuses;
+    @FXML
+    private Button okBtn;
 
     private MainApp mainApp;
     private List<Drive> driveList;
     private List<TimeTablePosition> timeTablePositionList;
+    private List<Bus> busList;
     private Course courseData;
 
     @FXML
     private void initialize() {
     	courseData = new Course();
     	
-    	addDriverBtn.setOnAction(new EventHandler<ActionEvent>() {
-    	    @Override public void handle(ActionEvent e) {
-    	    	 ObservableList<Person> observableList = tableWorkers.getItems();
-    	    	 if(observableList.isEmpty())
-    	    		 return;
-    	    	 observableList.addAll(mainApp.getFreeDrivers().get(choiceBoxDrivers.getSelectionModel().getSelectedIndex()));
-    	    	tableWorkers.setItems(observableList);
-    	    }
-    	});
     	
-    	addHostessBtn.setOnAction(new EventHandler<ActionEvent>() {
-    	    @Override public void handle(ActionEvent e) {
-    	    	 ObservableList<Person> observableList = tableWorkers.getItems();
-    	    	 if(observableList.isEmpty())
-    	    		 return;
-    	    	 observableList.addAll(mainApp.getFreeHostess().get(choiceBoxHostess.getSelectionModel().getSelectedIndex()));
-    	    	tableWorkers.setItems(observableList);
-    	    }
-    	});
     	
     	columnWorkers.setCellValueFactory(cellData -> new SimpleStringProperty( cellData.getValue().getName() + " "
     			+ cellData.getValue().getSurname()));
@@ -150,20 +136,52 @@ public class AddingCourseController {
 		             return;
 				}
 				courseData.setDate(c);
-				choiceBoxBuses.setItems(mainApp.getFreeBuses(courseData)
+				busList = mainApp.getFreeBuses(courseData);
+						
+				choiceBoxBuses.setItems(busList
 						.stream()
 						.map(b -> b.getLicensePlate())
 		    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));	
-				choiceBoxDrivers.setItems(mainApp.getFreeDrivers().stream().map(d -> d.getName()+ " " + d.getSurname())
+				choiceBoxDrivers.setItems(mainApp.getFreeDrivers(courseData).stream().map(d -> d.getName()+ " " + d.getSurname())
 			    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
 			    	
-				choiceBoxHostess.setItems(mainApp.getFreeHostess().stream().map(h -> h.getName()+ " " + h.getSurname())
+				choiceBoxHostess.setItems(mainApp.getFreeHostess(courseData).stream().map(h -> h.getName()+ " " + h.getSurname())
 			    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
 				choiceBoxBuses.setDisable(false);
 				choiceBoxDrivers.setDisable(false);
 				choiceBoxHostess.setDisable(false);
 			}
         });
+    	
+    	choiceBoxBuses.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue<?> ov, Object t, Object t1) {
+            	courseData.setBus(busList.get(choiceBoxBuses.getSelectionModel().getSelectedIndex()));
+            }
+        });
+    	
+    	addDriverBtn.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+    	    	 ObservableList<Person> observableList = tableWorkers.getItems();
+    	    	 observableList.addAll(mainApp.getFreeDrivers(courseData).get(choiceBoxDrivers.getSelectionModel().getSelectedIndex()));
+    	    	tableWorkers.setItems(observableList);
+    	    }
+    	});
+    	
+    	addHostessBtn.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+    	    	 ObservableList<Person> observableList = tableWorkers.getItems();
+    	    	 observableList.addAll(mainApp.getFreeHostess(courseData).get(choiceBoxHostess.getSelectionModel().getSelectedIndex()));
+    	    	tableWorkers.setItems(observableList);
+    	    }
+    	});
+    	
+    	okBtn.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+    	    	List<Person> observableList = tableWorkers.getItems();
+    	    	mainApp.insertCourse(courseData,observableList);
+   	    }
+   	});
     	
     }
 
