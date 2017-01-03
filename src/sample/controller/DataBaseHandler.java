@@ -635,7 +635,7 @@ public class DataBaseHandler {
 			Statement statement = c.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
-				String leavingTime = resultSet.getString("LEAVING_TIME");
+				String leavingTime = resultSet.getString("LEAVING_HOUR");
 				Date courseDate = resultSet.getDate("COURSE_DATE");
 				Drive drive = null;
 				int driveId = resultSet.getInt("DRIVE_ID");
@@ -646,7 +646,7 @@ public class DataBaseHandler {
 				}
 				Calendar calLeaving =  Calendar.getInstance();
 				calLeaving.setTime(courseDate);
-				calLeaving.set(Calendar.HOUR_OF_DAY, Integer.valueOf(leavingTime.substring(0,leavingTime.indexOf(':')-1)));
+				calLeaving.set(Calendar.HOUR_OF_DAY, Integer.valueOf(leavingTime.substring(0,leavingTime.indexOf(':'))));
 				calLeaving.set(Calendar.MINUTE, Integer.valueOf(leavingTime.substring(leavingTime.indexOf(':')+1,leavingTime.length())));
 				Calendar calArriving = Calendar.getInstance();
 				calArriving.setTimeInMillis(calLeaving.getTimeInMillis());
@@ -761,7 +761,7 @@ public class DataBaseHandler {
 	}
 
 	private void insertStaffForCourse(long courseId, int staffMemberId) {
-		String query = "insert into STAFF(COURSE_ID,PERSON_ID) "
+		String query = "insert into STAFF_COURSE_MEMBERS(COURSE_ID,PERSON_ID) "
 				+ "values("+courseId+","+staffMemberId+")";
 		Connection c = null;
 		try {

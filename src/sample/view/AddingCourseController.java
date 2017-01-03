@@ -95,6 +95,8 @@ public class AddingCourseController {
     	choiceBoxTimeTablePosition.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
             @Override
             public void changed(ObservableValue<?> ov, Object t, Object t1) {
+            	if(choiceBoxTimeTablePosition.getSelectionModel().isEmpty())
+            		return;
             	TimeTablePosition ttp = timeTablePositionList.get(choiceBoxTimeTablePosition.getSelectionModel().getSelectedIndex());
             	courseData.setTimeTablePosition(ttp);
             	datePicker.setDisable(false);
@@ -105,6 +107,8 @@ public class AddingCourseController {
     	datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
 			@Override
 			public void changed(ObservableValue<? extends LocalDate> arg0, LocalDate arg1, LocalDate arg2) {
+				if(datePicker.getValue() == null)
+					return;
 				if(timeTablePositionList == null) {
 					Alert alert = new Alert(Alert.AlertType.WARNING);
 		             alert.initOwner(mainApp.getPrimaryStage());
@@ -116,10 +120,14 @@ public class AddingCourseController {
 				}
 				LocalDate serviceLocalDate = datePicker.getValue();
 				Calendar c =  Calendar.getInstance();
-				c.set(serviceLocalDate.getYear(), serviceLocalDate.getMonthValue()-1, serviceLocalDate.getDayOfMonth(),
-						Integer.valueOf(timePicker.getText().substring(0,timePicker.getText().indexOf(':')-1)),
-						Integer.valueOf(
-								timePicker.getText().substring(timePicker.getText().indexOf(':')+1,timePicker.getText().length())));
+				String leavingHour = timeTablePositionList.get(choiceBoxTimeTablePosition.getSelectionModel().getSelectedIndex()).getLeavingHour();
+				String hour = leavingHour.substring(0,leavingHour.indexOf(':'));
+				String minute = leavingHour.substring(leavingHour.indexOf(':')+1,timePicker.getText().length());
+				c.set(serviceLocalDate.getYear(), 
+						serviceLocalDate.getMonthValue()-1, 
+						serviceLocalDate.getDayOfMonth(),
+						Integer.valueOf(hour),
+						Integer.valueOf(minute));
 				int day_of_week = c.get(Calendar.DAY_OF_WEEK);
 				if(WeekDays.valueOf(
 						timeTablePositionList.get(
@@ -132,7 +140,7 @@ public class AddingCourseController {
 		             alert.setHeaderText("Wrong weekday selected");
 		             alert.setContentText("Please select proper weekday.");
 		             alert.showAndWait();
-		             datePicker.getEditor().clear();
+		             
 		             return;
 				}
 				courseData.setDate(c);
@@ -191,8 +199,6 @@ public class AddingCourseController {
        
     	driveList = mainApp.getDriveData();
     	choiceBoxDrive.setItems(driveList.stream().map(d -> d.getFrom()+ " ->" + d.getTo())
-    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
-    	choiceBoxBuses.setItems(mainApp.getBusData().stream().map(b -> b.getLicensePlate())
     			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
     	SimpleDateFormat format = new SimpleDateFormat("HH:mm");
     	try {
