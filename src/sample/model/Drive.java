@@ -60,6 +60,12 @@ public class Drive {
         this.listOfIntermediateDrive = new ArrayList<>(listOfIntermediateDrive);
     }
 
+    @Override
+    public String toString()
+    {
+     return "Departure from: " + getFrom() + "; \t To: " + getTo();
+    }
+
     public String getFrom() {
         return from.get();
     }
