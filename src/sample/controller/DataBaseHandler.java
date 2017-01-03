@@ -13,8 +13,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import consts.BusConsts;
 import consts.BusModelConsts;
@@ -25,6 +27,7 @@ import consts.ServiceConsts;
 import consts.TimeTablePositionConsts;
 import sample.model.Bus;
 import sample.model.BusModel;
+import sample.model.Course;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
 import sample.model.Person;
@@ -664,5 +667,55 @@ public class DataBaseHandler {
 		}
 
 		return timeTable;
+	}
+
+	public List<Bus> getFreeBuses(Course courseData) {
+		List<Drive> allDrives = getAllDrives();
+		String query = "select * from COURSES c,TIME_TABLE_POSITIONS ttp "
+				+ "where c.TIME_TABLE_POSITION_ID=ttp.TIME_TABLE_POSITION_ID";
+		
+		Calendar leavingCourseTime = courseData.getDate();
+		Calendar arrivingCourseTime = Calendar.getInstance();
+		arrivingCourseTime.setTimeInMillis(courseData.getDate().getTimeInMillis());
+		arrivingCourseTime.add(Calendar.MINUTE, courseData.getCourseDrive().getTime());
+		List<Integer> colidingBusesId = new ArrayList<>();
+		Connection c = null;
+		try {
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				String leavingTime = resultSet.getString("LEAVING_TIME");
+				Date courseDate = resultSet.getDate("COURSE_DATE");
+				Drive drive = null;
+				int driveId = resultSet.getInt("DRIVE_ID");
+				for(Drive d : allDrives) 
+				{
+					if(d.getId() == driveId)
+						drive = d;
+				}
+				Calendar calLeaving =  Calendar.getInstance();
+				calLeaving.setTime(courseDate);
+				calLeaving.set(Calendar.HOUR_OF_DAY, Integer.valueOf(leavingTime.substring(0,leavingTime.indexOf(':')-1)));
+				calLeaving.set(Calendar.MINUTE, Integer.valueOf(leavingTime.substring(leavingTime.indexOf(':')+1,leavingTime.length())));
+				Calendar calArriving = Calendar.getInstance();
+				calArriving.setTimeInMillis(calLeaving.getTimeInMillis());
+				calArriving.add(Calendar.MINUTE, drive.getTime());
+				if(calArriving.compareTo(arrivingCourseTime) < 0 && calArriving.compareTo(leavingCourseTime) > 0) {
+					colidingBusesId.add(resultSet.getInt("BUS_ID"));
+				}
+			}
+			
+		}catch (SQLException ex) {
+			System.err.println("Selecting time table positions for drive failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+		return getAllBuses().stream().filter(b -> !colidingBusesId.contains(b.getBusId())).collect(Collectors.toList());
+	}
+	
+	public List<Bus> getCollidingCourses(Date date, String startingHour, String stopHour, Bus b) {
+		String query = "select * from BUSES ";
+		return null;
 	}
 }

@@ -26,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.DateTimeStringConverter;
 import sample.controller.MainApp;
+import sample.model.Course;
 import sample.model.Drive;
 import sample.model.Person;
 import sample.model.TimeTablePosition;
@@ -63,12 +64,17 @@ public class AddingCourseController {
     private MainApp mainApp;
     private List<Drive> driveList;
     private List<TimeTablePosition> timeTablePositionList;
+    private Course courseData;
 
     @FXML
     private void initialize() {
+    	courseData = new Course();
+    	
     	addDriverBtn.setOnAction(new EventHandler<ActionEvent>() {
     	    @Override public void handle(ActionEvent e) {
     	    	 ObservableList<Person> observableList = tableWorkers.getItems();
+    	    	 if(observableList.isEmpty())
+    	    		 return;
     	    	 observableList.addAll(mainApp.getFreeDrivers().get(choiceBoxDrivers.getSelectionModel().getSelectedIndex()));
     	    	tableWorkers.setItems(observableList);
     	    }
@@ -77,6 +83,8 @@ public class AddingCourseController {
     	addHostessBtn.setOnAction(new EventHandler<ActionEvent>() {
     	    @Override public void handle(ActionEvent e) {
     	    	 ObservableList<Person> observableList = tableWorkers.getItems();
+    	    	 if(observableList.isEmpty())
+    	    		 return;
     	    	 observableList.addAll(mainApp.getFreeHostess().get(choiceBoxHostess.getSelectionModel().getSelectedIndex()));
     	    	tableWorkers.setItems(observableList);
     	    }
@@ -93,6 +101,18 @@ public class AddingCourseController {
             			driveList.get(choiceBoxDrive.getSelectionModel().getSelectedIndex()).getId());
             	choiceBoxTimeTablePosition.setItems(timeTablePositionList.stream().map(ttp -> ttp.getWeekDay() + " - "
             			+ ttp.getLeavingHour()).collect(Collectors.toCollection(FXCollections::observableArrayList)));
+            	choiceBoxTimeTablePosition.setDisable(false);
+            	courseData.setCourseDrive(driveList.get(choiceBoxDrive.getSelectionModel().getSelectedIndex()));
+            }
+        });
+    	
+    	choiceBoxTimeTablePosition.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue<?> ov, Object t, Object t1) {
+            	TimeTablePosition ttp = timeTablePositionList.get(choiceBoxTimeTablePosition.getSelectionModel().getSelectedIndex());
+            	courseData.setTimeTablePosition(ttp);
+            	datePicker.setDisable(false);
+            	timePicker.setText(ttp.getLeavingHour());
             }
         });
     	
@@ -110,7 +130,10 @@ public class AddingCourseController {
 				}
 				LocalDate serviceLocalDate = datePicker.getValue();
 				Calendar c =  Calendar.getInstance();
-				c.set(serviceLocalDate.getYear(), serviceLocalDate.getMonthValue()-1, serviceLocalDate.getDayOfMonth());
+				c.set(serviceLocalDate.getYear(), serviceLocalDate.getMonthValue()-1, serviceLocalDate.getDayOfMonth(),
+						Integer.valueOf(timePicker.getText().substring(0,timePicker.getText().indexOf(':')-1)),
+						Integer.valueOf(
+								timePicker.getText().substring(timePicker.getText().indexOf(':')+1,timePicker.getText().length())));
 				int day_of_week = c.get(Calendar.DAY_OF_WEEK);
 				if(WeekDays.valueOf(
 						timeTablePositionList.get(
@@ -124,20 +147,30 @@ public class AddingCourseController {
 		             alert.setContentText("Please select proper weekday.");
 		             alert.showAndWait();
 		             datePicker.getEditor().clear();
+		             return;
 				}
-					
+				courseData.setDate(c);
+				choiceBoxBuses.setItems(mainApp.getFreeBuses(courseData)
+						.stream()
+						.map(b -> b.getLicensePlate())
+		    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));	
+				choiceBoxDrivers.setItems(mainApp.getFreeDrivers().stream().map(d -> d.getName()+ " " + d.getSurname())
+			    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+			    	
+				choiceBoxHostess.setItems(mainApp.getFreeHostess().stream().map(h -> h.getName()+ " " + h.getSurname())
+			    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+				choiceBoxBuses.setDisable(false);
+				choiceBoxDrivers.setDisable(false);
+				choiceBoxHostess.setDisable(false);
 			}
         });
+    	
     }
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
         
-        choiceBoxDrivers.setItems(mainApp.getFreeDrivers().stream().map(d -> d.getName()+ " " + d.getSurname())
-    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
-    	
-    	choiceBoxHostess.setItems(mainApp.getFreeHostess().stream().map(h -> h.getName()+ " " + h.getSurname())
-    			.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+       
     	driveList = mainApp.getDriveData();
     	choiceBoxDrive.setItems(driveList.stream().map(d -> d.getFrom()+ " ->" + d.getTo())
     			.collect(Collectors.toCollection(FXCollections::observableArrayList)));

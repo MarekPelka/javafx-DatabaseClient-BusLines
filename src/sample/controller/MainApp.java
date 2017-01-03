@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 import javafx.application.Application;
@@ -346,5 +348,9 @@ public class MainApp extends Application {
 
 	public List<TimeTablePosition> getTimeTablePositionsForDrive(int driveId) {
 		return dbh.getTimeTablePositionfForDrive(driveId);
+	}
+
+	public List<Bus> getFreeBuses(Course courseData) {
+		return dbh.getFreeBuses(courseData);
 	}
 }

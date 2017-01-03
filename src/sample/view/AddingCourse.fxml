@@ -42,33 +42,33 @@
                         </HBox>
                         <HBox spacing="10.0" GridPane.columnIndex="1"  GridPane.rowIndex="1">
                            <children>
-                              <ChoiceBox fx:id="choiceBoxTimeTablePosition" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
+                              <ChoiceBox fx:id="choiceBoxTimeTablePosition" disable="true" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
                            </children>
                         </HBox>
                         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
-                              <DatePicker fx:id="datePicker" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
+                              <DatePicker fx:id="datePicker" disable="true" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
                            </children>
                         </HBox>
                         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <children>
-                              <TextField fx:id="timePicker" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
+                              <TextField fx:id="timePicker" disable="true" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />                          
                            </children>
                         </HBox>
                         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <children>
-                              <ChoiceBox fx:id="choiceBoxBuses" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
+                              <ChoiceBox fx:id="choiceBoxBuses" disable="true" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
                            </children>
                         </HBox>
                         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <children>
-                              <ChoiceBox fx:id="choiceBoxDrivers" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
+                              <ChoiceBox fx:id="choiceBoxDrivers" disable="true" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
                               <Button fx:id="addDriverBtn" text="+" />
                            </children>
                         </HBox>
                         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <children>
-                              <ChoiceBox fx:id="choiceBoxHostess" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
+                              <ChoiceBox fx:id="choiceBoxHostess" disable="true" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="250.0" />
                               <Button fx:id="addHostessBtn" text="+" />
                            </children>
                         </HBox>
