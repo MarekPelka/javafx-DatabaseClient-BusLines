@@ -204,6 +204,7 @@ public class DataBaseHandler {
 				+"inner join SERVICE_PLAN_POSITIONS spp on spp.SERVICE_PLAN_POSITION_ID = pr.SERVICE_PLAN_POSITION_ID  "
 				+"where spp.BUS_MODEL_ID=? AND (spp.MILEAGE_KM BETWEEN ? AND ?) OR (spp.MONTHS_TO_SERVICE BETWEEN ? AND ?) ";
 		List<Service> result = new ArrayList<>();
+		List<Integer> historyIds = getServiceHistory(bus).stream().map(s -> s.getId()).collect(Collectors.toList());
 		Connection c = null;
 		try {
 			c = createConnection();
@@ -223,7 +224,8 @@ public class DataBaseHandler {
 						resultSet.getString(ServiceConsts.MEANINGNESS),
 						resultSet.getInt(ServiceConsts.NEEDED_MILEAGE),
 						resultSet.getInt(ServiceConsts.NEEDED_MONTH));
-				result.add(service);
+				if(!historyIds.contains(service.getId()))
+					result.add(service);
 			}
 		} catch (SQLException ex) {
 			System.err.println("Selecting services from service plan  failed.\n" + ex.getSQLState());
@@ -269,13 +271,14 @@ public class DataBaseHandler {
 		String query = "select s.SERVICE_ID, s.OPERATION, s.MEANINGNESS, sbp.SERVICE_DATE, sbp.MILEAGE_THIS_TIME"
 				+ " from SERVICES_BOOK_POSITIONS sbp "
 				+ "inner join SERVICE_ACCOMPLISHMENTS sa on sa.SERVICES_BOOK_POSITION_ID=sbp.SERVICES_BOOK_POSITION_ID "
-				+ "inner join SERVICES s on s.SERVICE_ID=sa.SERVICE_ID where BUS_ID=" + bus.getBusId();
+				+ "inner join SERVICES s on s.SERVICE_ID=sa.SERVICE_ID where BUS_ID=" + bus.getBusId() + " and STATE=?";
 		List<Service> result = new ArrayList<>();
 		Connection c = null;
 		try {
 			c = createConnection();
-			Statement statement = c.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
+			PreparedStatement statement = c.prepareStatement(query);
+			statement.setString(1, "COMPLETE");
+			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
 				Service service = new Service(resultSet.getInt(ServiceConsts.ID),

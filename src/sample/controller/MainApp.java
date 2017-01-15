@@ -339,7 +339,7 @@ public class MainApp extends Application {
 		return serviceHistory;
 	}
 	
-	public void insertServiceBookPosition(Bus bus, List<Service> services, Date serviceDate,
+	public void insertServicesPosition(Bus bus, List<Service> services, Date serviceDate,
 			int serviceMileage,String state,String carServiceData) {
 		dbh.insertServicesIntoBusServiceBook(bus, services, serviceDate, serviceMileage, state, carServiceData);
 	}

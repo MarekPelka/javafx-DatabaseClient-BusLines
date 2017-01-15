@@ -131,7 +131,7 @@ public class BusCheckupController {
 		Calendar c =  Calendar.getInstance();
 		c.set(serviceLocalDate.getYear(), serviceLocalDate.getMonthValue()-1, serviceLocalDate.getDayOfMonth());
 		Date serviceDate = new Date(c.getTimeInMillis());
-		mainApp.insertServiceBookPosition(choiceBoxBus.getSelectionModel().getSelectedItem(),
+		mainApp.insertServicesPosition(choiceBoxBus.getSelectionModel().getSelectedItem(),
 				toAdd, serviceDate, Integer.valueOf(textFieldMileage.getText()), "COMPLETE", serviceData);
     }
     
