@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -20,15 +21,19 @@ import java.util.stream.Collectors;
 
 import consts.BusConsts;
 import consts.BusModelConsts;
+import consts.CategoryConsts;
 import consts.DriveConsts;
+import consts.GraphicPositionConsts;
 import consts.IntermediateDriveConsts;
 import consts.PersonConsts;
 import consts.ServiceConsts;
 import consts.TimeTablePositionConsts;
 import sample.model.Bus;
 import sample.model.BusModel;
+import sample.model.Category;
 import sample.model.Course;
 import sample.model.Drive;
+import sample.model.GraphicPosition;
 import sample.model.IntermediateDrive;
 import sample.model.Person;
 import sample.model.Service;
@@ -82,7 +87,6 @@ public class DataBaseHandler {
 			url = prop.getProperty("url");
 			login = prop.getProperty("login");
 			password = prop.getProperty("password");
-
 		}
 
 	}
@@ -198,7 +202,7 @@ public class DataBaseHandler {
 				"select distinct s.SERVICE_ID,s.OPERATION,s.MEANINGNESS,spp.MILEAGE_KM,spp.MONTHS_TO_SERVICE from SERVICES s "
 				+"inner join  POSITION_REQUIREMENTS pr on s.SERVICE_ID = pr.SERVICE_ID "
 				+"inner join SERVICE_PLAN_POSITIONS spp on spp.SERVICE_PLAN_POSITION_ID = pr.SERVICE_PLAN_POSITION_ID  "
-				+"where spp.BUS_MODEL_ID=? AND (spp.MILEAGE_KM < ? OR spp.MONTHS_TO_SERVICE < ?) ";
+				+"where spp.BUS_MODEL_ID=? AND (spp.MILEAGE_KM BETWEEN ? AND ?) OR (spp.MONTHS_TO_SERVICE BETWEEN ? AND ?) ";
 		List<Service> result = new ArrayList<>();
 		Connection c = null;
 		try {
@@ -206,8 +210,11 @@ public class DataBaseHandler {
 			PreparedStatement statement = c.prepareStatement(query);
 			int counter = 1;
 			statement.setInt(counter++, bus.getBusModelId());
-			statement.setInt(counter++, ageInMonths);
+
+			statement.setInt(counter++, getMileageRangeLowerValue(mileage));
 			statement.setInt(counter++, mileage);
+			statement.setInt(counter++, getMonthRangeLowerValue(ageInMonths));
+			statement.setInt(counter++, ageInMonths);
 			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
@@ -225,6 +232,36 @@ public class DataBaseHandler {
 		}
 
 		return result;
+	}
+	
+	private int getMonthRangeLowerValue(int monthValue) {
+		if(monthValue >= 12)
+			return 12;
+		else if(monthValue >= 9)
+			return 9;
+		else if(monthValue >= 6)
+			return 6;
+		else if(monthValue >= 3)
+			return 3;
+		else if(monthValue >= 1)
+			return 1;
+		else 
+			return 0;
+	}
+	
+	private int getMileageRangeLowerValue(int mileageValue) {
+		if(mileageValue >= 19200)
+			return 19200;
+		else if(mileageValue >= 14400)
+			return 14400;
+		else if(mileageValue >= 9600)
+			return 9600;
+		else if(mileageValue >= 4800)
+			return 4800;
+		else if(mileageValue >= 1600)
+			return 1600;
+		else 
+			return 0;
 	}
 	
 	/** Getting all data of done  services with date for given bus */
@@ -590,6 +627,32 @@ public class DataBaseHandler {
 			endConnection(c);
 		}
 	}
+	
+
+	public List<Category> getCategories() {
+		String query = "select * from CATEGORIES";
+		List<Category> result = new ArrayList<>();
+		Connection c = null;
+		try {
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next()) {
+				Category category = new Category(resultSet.getInt(CategoryConsts.ID),
+						resultSet.getString(CategoryConsts.SHORTCUT),
+						resultSet.getString(CategoryConsts.DESCRIPTION),
+						resultSet.getFloat(CategoryConsts.PRICE_RATE));
+				result.add(category);
+			}
+		} catch (SQLException ex) {
+			System.err.println("Selecting all categories failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+
+		return result;
+	}
 
 	public List<TimeTablePosition> getTimeTablePositionfForDrive(int driveId) {
 		String query = "select * from TIME_TABLE_POSITIONS where DRIVE_ID="+ driveId;
@@ -604,10 +667,10 @@ public class DataBaseHandler {
 				TimeTablePosition timetablePosition = new TimeTablePosition(
 						resultSet.getInt(TimeTablePositionConsts.ID),
 						resultSet.getInt(TimeTablePositionConsts.DRIVE_ID),
-						resultSet.getInt(TimeTablePositionConsts.CATEGORY_ID),
 						resultSet.getString(TimeTablePositionConsts.WEEK_DAY),
 						resultSet.getString(TimeTablePositionConsts.LEAVING_HOUR),
-						resultSet.getString(TimeTablePositionConsts.PHONE_NUMBER));
+						resultSet.getString(TimeTablePositionConsts.REGISTER_TELEPHONE_NUMBER),
+						resultSet.getFloat(TimeTablePositionConsts.TIME_CATEGORY_RATE));
 				timeTable.add(timetablePosition);
 			}
 		} catch (SQLException ex) {
@@ -619,12 +682,58 @@ public class DataBaseHandler {
 		return timeTable;
 	}
 
-	public List<Bus> getFreeBuses(Course courseData) {
-		List<Drive> allDrives = getAllDrives();
-		String query = "select * from COURSES c,TIME_TABLE_POSITIONS ttp "
-				+ "where c.TIME_TABLE_POSITION_ID=ttp.TIME_TABLE_POSITION_ID";
+	public List<Bus> getFreeBusesByCategory(Course courseData, int categoryId) {
+		List<Bus> result = new ArrayList<>();
+		String colidatingBusIds = getColidingBusesId(courseData).stream()
+			     .map(i -> i.toString())
+			     .collect(Collectors.joining(","));
+		String query = null;
+		if(!colidatingBusIds.isEmpty())
+			query = "select * from BUSES join BUS_MODELS on BUSES.BUS_MODEL_ID = BUS_MODELS.BUS_MODEL_ID WHERE BUS_ID NOT IN (" + 
+				getColidingBusesId(courseData).stream()
+			     .map(i -> i.toString())
+			     .collect(Collectors.joining(",")) + ") AND CATEGORY_ID="+categoryId;
+		else
+			query = "select * from BUSES join BUS_MODELS on BUSES.BUS_MODEL_ID = BUS_MODELS.BUS_MODEL_ID WHERE CATEGORY_ID="+categoryId;
 		
-		Calendar leavingCourseTime = courseData.getDate();
+		
+		Connection c = null;
+		try {
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+
+			while (resultSet.next()) {
+				Bus bus = new Bus(resultSet.getInt(BusConsts.ID), resultSet.getInt(BusConsts.MODEL_ID),
+						resultSet.getDate(BusConsts.BOUGHT_TIME), resultSet.getString(BusConsts.LICENSE_PLATE),
+						resultSet.getString(BusConsts.SERIAL_NUMBER), resultSet.getInt(BusConsts.SEATS_NUM),
+						resultSet.getInt(BusConsts.MILEAGE), resultSet.getFloat(BusConsts.CLASS_RATE),
+						resultSet.getString(BusConsts.BUS_MODEL_NAME));
+				result.add(bus);
+			}
+		} catch (SQLException ex) {
+			System.err.println("Selecting all buses failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+
+		return result;
+	}
+	
+	public List<Integer> getColidingBusesId(Course courseData) {
+		String query = "select BUS_ID from COURSES c,TIME_TABLE_POSITIONS ttp "
+				+ "where c.TIME_TABLE_POSITION_ID=ttp.TIME_TABLE_POSITION_ID " 
+				+ "and CAST(c.COURSE_DATE as TIMESTAMP) between  ? and ? or "
+				+ "(CAST(c.COURSE_DATE as TIMESTAMP) + "
+				+ "(select sum(TIME) from INTERMEDIATE_DRIVES idr where  idr.INTERMEDIATE_DRIVE_ID in "
+				+ "(select INTERMEDIATE_DRIVE_ID from DRIVE_CONTENTS where DRIVE_ID=ttp.DRIVE_ID))/1440) "
+				+ " between ? and ? or "
+				+ "(CAST(c.COURSE_DATE as TIMESTAMP) < ? and "
+				+ "(CAST(c.COURSE_DATE as TIMESTAMP) + "
+				+ "(select sum(TIME) from INTERMEDIATE_DRIVES idr where  idr.INTERMEDIATE_DRIVE_ID in "
+				+ "(select INTERMEDIATE_DRIVE_ID from DRIVE_CONTENTS where DRIVE_ID=ttp.DRIVE_ID))/1440) > ?)";
+		Calendar leavingCourseTime = Calendar.getInstance();
+		leavingCourseTime.setTimeInMillis(courseData.getDate().getTimeInMillis());
 		Calendar arrivingCourseTime = Calendar.getInstance();
 		arrivingCourseTime.setTimeInMillis(courseData.getDate().getTimeInMillis());
 		arrivingCourseTime.add(Calendar.MINUTE, courseData.getCourseDrive().getTime());
@@ -632,57 +741,77 @@ public class DataBaseHandler {
 		Connection c = null;
 		try {
 			c = createConnection();
-			Statement statement = c.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
-			while (resultSet.next()) {
-				String leavingTime = resultSet.getString("LEAVING_HOUR");
-				Date courseDate = resultSet.getDate("COURSE_DATE");
-				Drive drive = null;
-				int driveId = resultSet.getInt("DRIVE_ID");
-				for(Drive d : allDrives) 
-				{
-					if(d.getId() == driveId)
-						drive = d;
-				}
-				Calendar calLeaving =  Calendar.getInstance();
-				calLeaving.setTime(courseDate);
-				calLeaving.set(Calendar.HOUR_OF_DAY, Integer.valueOf(leavingTime.substring(0,leavingTime.indexOf(':'))));
-				calLeaving.set(Calendar.MINUTE, Integer.valueOf(leavingTime.substring(leavingTime.indexOf(':')+1,leavingTime.length())));
-				Calendar calArriving = Calendar.getInstance();
-				calArriving.setTimeInMillis(calLeaving.getTimeInMillis());
-				calArriving.add(Calendar.MINUTE, drive.getTime());
-				if((calArriving.compareTo(arrivingCourseTime) < 0 && calArriving.compareTo(leavingCourseTime) > 0) ||
-						(calLeaving.compareTo(arrivingCourseTime) < 0 && calLeaving.compareTo(leavingCourseTime) > 0)	) {
-					colidingBusesId.add(resultSet.getInt("BUS_ID"));
-				}
-			}
-			
+			PreparedStatement pstatement = c.prepareStatement(query);
+			int counter = 1;
+			pstatement.setTimestamp(counter++, new Timestamp(leavingCourseTime.getTimeInMillis()));
+			pstatement.setTimestamp(counter++, new Timestamp(arrivingCourseTime.getTimeInMillis()));
+			pstatement.setTimestamp(counter++, new Timestamp(leavingCourseTime.getTimeInMillis()));
+			pstatement.setTimestamp(counter++, new Timestamp(arrivingCourseTime.getTimeInMillis()));
+			pstatement.setTimestamp(counter++, new Timestamp(leavingCourseTime.getTimeInMillis()));
+			pstatement.setTimestamp(counter++, new Timestamp(arrivingCourseTime.getTimeInMillis()));
+			ResultSet resultSet = pstatement.executeQuery();
+			while(resultSet.next())
+				colidingBusesId.add(resultSet.getInt("BUS_ID"));
 		}catch (SQLException ex) {
-			System.err.println("Selecting free buses failed.\n" + ex.getSQLState());
+			System.err.println("Selecting colidating buses failed.\n" + ex.getSQLState());
 		} finally {
 			endConnection(c);
 		}
-		return getAllBuses().stream().filter(b -> !colidingBusesId.contains(b.getBusId())).collect(Collectors.toList());
+		return colidingBusesId;
 	}
 	
 	/** Getting all free drivers in time current */
 	public List<Person> getFreeDrivers(Course courseData) {
-		String query = "select * from DRIVERS d,PERSONS p  where d.DRIVER_ID not in "
-				+ "(select gp.DRIVER_ID from GRAPHIC_POSITIONS gp where gp.DRIVER_ID is not null and "
-				+ "? between gp.TIME_FROM and gp.TIME_TO "
-				+ "and ? between gp.TIME_FROM and gp.TIME_TO ) AND d.PERSON_ID=p.PERSON_ID";
 		List<Person> result = new ArrayList<>();
-		Calendar dateLeaving = courseData.getDate();
-		Calendar dateArriving = courseData.getDate();
+		List<GraphicPosition> graphicPositionFromLeaving = getGraphicPositionsFromLeavingDate(
+				courseData.getDate().getTimeInMillis()).stream().filter(
+						gp -> gp.getDriverId() != 0 && gp.getStatus().equals("FREE"))
+				.collect(Collectors.toList());
+		
+		Calendar dateArriving = Calendar.getInstance();
+		dateArriving.setTimeInMillis(courseData.getDate().getTimeInMillis());
 		dateArriving.add(Calendar.MINUTE, courseData.getCourseDrive().getTime());
+		
+		List<GraphicPosition> graphicPositionFromArriving = getGraphicPositionsFromArrivingDate(
+				dateArriving.getTimeInMillis()).stream().filter(
+						gp -> gp.getDriverId() != 0 && gp.getStatus().equals("FREE"))
+				.collect(Collectors.toList());
+		
+		List<GraphicPosition> graphicPositionsStrictInsideCourseTime = getGraphicPositionsStrictInsideCourseTime(
+				courseData.getDate().getTimeInMillis(),dateArriving.getTimeInMillis());
+		
+		List<Integer> driverIds = graphicPositionFromLeaving.stream()
+	              .map(GraphicPosition::getDriverId)
+	              .collect(Collectors.toList());
+		
+		List<Integer> freeDrivers = new ArrayList<>();
+		for(int id : driverIds) {
+			if(graphicPositionFromArriving.stream()
+	              .map(GraphicPosition::getDriverId)
+	              .collect(Collectors.toList()).contains(id))
+			{
+				if(graphicPositionsStrictInsideCourseTime.isEmpty())
+					freeDrivers.add(id);
+				else if(graphicPositionsStrictInsideCourseTime.stream().filter(
+						gp -> gp.getDriverId() == id && gp.getStatus().equals("FREE")).count() == 
+						graphicPositionsStrictInsideCourseTime.size())
+					freeDrivers.add(id);
+			}
+		}
+		if(freeDrivers.isEmpty())
+			return result;
+		
+		String query = "select * from DRIVERS d,PERSONS p  where d.DRIVER_ID in (" +
+				freeDrivers.stream()
+			    .map(i -> i.toString())
+			    .collect(Collectors.joining(","))
+				+ ") AND d.PERSON_ID=p.PERSON_ID";
+		
 		Connection c = null;
 		try {
 			c = createConnection();
-			PreparedStatement statement = c.prepareStatement(query);
-			int counter = 1;
-			statement.setDate(counter++, new Date(dateLeaving.getTimeInMillis()));
-			statement.setDate(counter++, new Date(dateArriving.getTimeInMillis()));
-			ResultSet resultSet = statement.executeQuery();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
 				Person person = new Person(resultSet.getInt(PersonConsts.ID), resultSet.getString(PersonConsts.NAME),
@@ -697,26 +826,179 @@ public class DataBaseHandler {
 
 		return result;
 	}
-
-	/** Getting all free hostess in time current */
-	public List<Person> getFreeHostess(Course courseData) {
-		String query = "select * from HOSTESS h,PERSONS p  where h.HOSTESS_ID not in "
-				+ "(select gp.HOSTESS_ID from GRAPHIC_POSITIONS gp where gp.HOSTESS_ID is not null and "
-				+ "? between gp.TIME_FROM and gp.TIME_TO and "
-				+ "? between gp.TIME_FROM and gp.TIME_TO ) AND h.PERSON_ID=p.PERSON_ID";
-		List<Person> result = new ArrayList<>();
+	
+	private List<GraphicPosition> getGraphicPositionsFromLeavingDate(long dateLeaving) {
+		List<GraphicPosition> result = new ArrayList<>();
+		String query = "select * from GRAPHIC_POSITIONS where "
+				+ "? between TIME_FROM and TIME_TO AND COURSE_ID IS NULL";
 		
-		Calendar dateLeaving = courseData.getDate();
-		Calendar dateArriving = courseData.getDate();
-		dateArriving.add(Calendar.MINUTE, courseData.getCourseDrive().getTime());
 		Connection c = null;
 		try {
 			c = createConnection();
-			PreparedStatement statement = c.prepareStatement(query);
-			int counter = 1;
-			statement.setDate(counter++, new Date(dateLeaving.getTimeInMillis()));
-			statement.setDate(counter++, new Date(dateArriving.getTimeInMillis()));
-			ResultSet resultSet = statement.executeQuery();
+			PreparedStatement pstatement = c.prepareStatement(query);
+			pstatement.setTimestamp(1, new Timestamp(dateLeaving));
+			ResultSet resultSet = pstatement.executeQuery();
+
+			while (resultSet.next()) {
+				Calendar calFrom=Calendar.getInstance();
+				calFrom.setTimeInMillis(resultSet.getTimestamp(GraphicPositionConsts.TIME_FROM).getTime());
+				
+				Calendar calTo=Calendar.getInstance();
+				calTo.setTimeInMillis(resultSet.getTimestamp(GraphicPositionConsts.TIME_TO).getTime());
+				
+				GraphicPosition gp = new GraphicPosition(
+						resultSet.getInt(GraphicPositionConsts.ID),
+						resultSet.getInt(GraphicPositionConsts.HOSTESS_ID),
+						resultSet.getInt(GraphicPositionConsts.DRIVER_ID),
+						resultSet.getInt(GraphicPositionConsts.COURSE_ID),
+						calFrom,
+						calTo,
+						resultSet.getString(GraphicPositionConsts.STATUS),
+						resultSet.getFloat(GraphicPositionConsts.HOURLY_BID)
+						);
+				result.add(gp);
+			}
+		} catch (SQLException ex) {
+			System.err.println("Selecting graphic positions by leaving date failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+
+		return result;
+	}
+	
+	private List<GraphicPosition> getGraphicPositionsStrictInsideCourseTime(long dateLeaving,long dateArriving) {
+		List<GraphicPosition> result = new ArrayList<>();
+		String query = "select * from GRAPHIC_POSITIONS where "
+				+ "TIME_FROM > ? and TIME_TO < ? and COURSE_ID IS NULL";
+		Connection c = null;
+		try {
+			c = createConnection();
+			PreparedStatement pstatement = c.prepareStatement(query);
+			pstatement.setTimestamp(1, new Timestamp(dateLeaving));
+			pstatement.setTimestamp(2, new Timestamp(dateArriving));
+			ResultSet resultSet = pstatement.executeQuery();
+
+			while (resultSet.next()) {
+				Calendar calFrom=Calendar.getInstance();
+				calFrom.setTimeInMillis(resultSet.getTimestamp(GraphicPositionConsts.TIME_FROM).getTime());
+				
+				Calendar calTo=Calendar.getInstance();
+				calTo.setTimeInMillis(resultSet.getTimestamp(GraphicPositionConsts.TIME_TO).getTime());
+				
+				GraphicPosition gp = new GraphicPosition(
+						resultSet.getInt(GraphicPositionConsts.ID),
+						resultSet.getInt(GraphicPositionConsts.HOSTESS_ID),
+						resultSet.getInt(GraphicPositionConsts.DRIVER_ID),
+						resultSet.getInt(GraphicPositionConsts.COURSE_ID),
+						calFrom,
+						calTo,
+						resultSet.getString(GraphicPositionConsts.STATUS),
+						resultSet.getFloat(GraphicPositionConsts.HOURLY_BID)
+						);
+				result.add(gp);
+			}
+		} catch (SQLException ex) {
+			System.err.println("Selecting graphic positions by leaving date failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+
+		return result;
+	}
+	
+	private List<GraphicPosition> getGraphicPositionsFromArrivingDate(long dateArriving) {
+		List<GraphicPosition> result = new ArrayList<>();
+		String query = "select * from GRAPHIC_POSITIONS where "
+				+ "? between TIME_FROM and TIME_TO AND COURSE_ID IS NULL";
+		
+		Connection c = null;
+		try {
+			c = createConnection();
+			PreparedStatement pstatement = c.prepareStatement(query);
+			pstatement.setTimestamp(1, new Timestamp(dateArriving));
+			ResultSet resultSet = pstatement.executeQuery();
+
+			while (resultSet.next()) {
+				Calendar calFrom=Calendar.getInstance();
+				calFrom.setTimeInMillis(resultSet.getTimestamp(GraphicPositionConsts.TIME_FROM).getTime());
+				
+				Calendar calTo=Calendar.getInstance();
+				calTo.setTimeInMillis(resultSet.getTimestamp(GraphicPositionConsts.TIME_TO).getTime());
+				
+				GraphicPosition gp = new GraphicPosition(
+						resultSet.getInt(GraphicPositionConsts.ID),
+						resultSet.getInt(GraphicPositionConsts.HOSTESS_ID),
+						resultSet.getInt(GraphicPositionConsts.DRIVER_ID),
+						resultSet.getInt(GraphicPositionConsts.COURSE_ID),
+						calFrom,
+						calTo,
+						resultSet.getString(GraphicPositionConsts.STATUS),
+						resultSet.getFloat(GraphicPositionConsts.HOURLY_BID)
+						);
+				result.add(gp);
+			}
+		} catch (SQLException ex) {
+			System.err.println("Selecting graphic positions by arriving date failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+
+		return result;
+	}
+
+	/** Getting all free hostess in time current */
+	public List<Person> getFreeHostess(Course courseData) {
+		List<Person> result = new ArrayList<>();
+		List<GraphicPosition> graphicPositionFromLeaving = getGraphicPositionsFromLeavingDate(
+				courseData.getDate().getTimeInMillis()).stream().filter(
+						gp -> gp.getHostessId() != 0 && gp.getStatus().equals("FREE"))
+				.collect(Collectors.toList());
+		
+		Calendar dateArriving = Calendar.getInstance();
+		dateArriving.setTimeInMillis(courseData.getDate().getTimeInMillis());
+		dateArriving.add(Calendar.MINUTE, courseData.getCourseDrive().getTime());
+		
+		List<GraphicPosition> graphicPositionFromArriving = getGraphicPositionsFromArrivingDate(
+				dateArriving.getTimeInMillis()).stream().filter(
+						gp -> gp.getHostessId() != 0 && gp.getStatus().equals("FREE"))
+				.collect(Collectors.toList());
+		
+		List<GraphicPosition> graphicPositionsStrictInsideCourseTime = getGraphicPositionsStrictInsideCourseTime(
+				courseData.getDate().getTimeInMillis(),dateArriving.getTimeInMillis());
+		
+		List<Integer> hostessIds = graphicPositionFromLeaving.stream()
+	              .map(GraphicPosition::getHostessId)
+	              .collect(Collectors.toList());
+		
+		List<Integer> freeHostess = new ArrayList<>();
+		for(int id : hostessIds) {
+			if(graphicPositionFromArriving.stream()
+	              .map(GraphicPosition::getHostessId)
+	              .collect(Collectors.toList()).contains(id))
+			{
+				if(graphicPositionsStrictInsideCourseTime.isEmpty())
+					freeHostess.add(id);
+				else if(graphicPositionsStrictInsideCourseTime.stream().filter(
+						gp -> gp.getHostessId() == id && gp.getStatus().equals("FREE")).count() == 
+						graphicPositionsStrictInsideCourseTime.size())
+					freeHostess.add(id);
+			}
+		}
+		if(freeHostess.isEmpty())
+			return result;
+		
+		String query = "select * from HOSTESS d,PERSONS p  where d.HOSTESS_ID in (" +
+				freeHostess.stream()
+			    .map(i -> i.toString())
+			    .collect(Collectors.joining(","))
+				+ ") AND d.PERSON_ID=p.PERSON_ID";
+		
+		Connection c = null;
+		try {
+			c = createConnection();
+			Statement statement = c.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
 				Person person = new Person(resultSet.getInt(PersonConsts.ID), resultSet.getString(PersonConsts.NAME),
@@ -742,27 +1024,29 @@ public class DataBaseHandler {
 			int counter = 1;
 			statement.setInt(counter++, courseData.getTimeTablePosition().getId());
 			statement.setInt(counter++, courseData.getBus().getBusId());
-			statement.setDate(counter++, new Date(courseData.getDate().getTimeInMillis()));
+			statement.setTimestamp(counter++, new Timestamp(courseData.getDate().getTimeInMillis()));
 			statement.executeUpdate();
 
 			Statement stmt= c.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT COURSE_SEQ.CURRVAL FROM dual");
-			long generatedId = -1;
+			int generatedId = -1;
 			if ( rs!=null && rs.next() )
 				generatedId =  	rs.getInt(1);
 			for(Person person : staff)
-				insertStaffForCourse(generatedId,person.getId());
+			{
+				courseData.setId(generatedId);
+				insertStaffForCourse(person.getId(),courseData);
+			}
 		} catch (SQLException ex) {
 			System.err.println("Inserting course failed.\n" + ex.getSQLState());
 		} finally {
 			endConnection(c);
 		}
-
 	}
 
-	private void insertStaffForCourse(long courseId, int staffMemberId) {
+	private void insertStaffForCourse(int staffMemberId,Course courseData) {
 		String query = "insert into STAFF_COURSE_MEMBERS(COURSE_ID,PERSON_ID) "
-				+ "values("+courseId+","+staffMemberId+")";
+				+ "values("+courseData.getId()+","+staffMemberId+")";
 		Connection c = null;
 		try {
 			c = createConnection();
@@ -773,5 +1057,227 @@ public class DataBaseHandler {
 		} finally {
 			endConnection(c);
 		}
+		
+		int driverId = getDriverIdFromPersonId(staffMemberId);
+		if(driverId != -1)
+		{
+			splitGraphicForDriver(driverId,courseData);
+			return;
+		}
+		int hostessId = getHostessIdFromPersonId(staffMemberId);
+		if(hostessId != -1)
+			splitGraphicForHostess(hostessId,courseData);
+	}
+
+	private void splitGraphicForHostess(int hostessId, Course courseData) {
+		GraphicPosition graphicPositionFromLeaving = getGraphicPositionsFromLeavingDate(
+				courseData.getDate().getTimeInMillis()).stream().filter(
+						gp -> gp.getHostessId() == hostessId && gp.getStatus().equals("FREE"))
+				.findFirst().get();
+		
+		Calendar dateArriving = Calendar.getInstance();
+		dateArriving.setTimeInMillis(courseData.getDate().getTimeInMillis());
+		dateArriving.add(Calendar.MINUTE, courseData.getCourseDrive().getTime());
+		
+		GraphicPosition graphicPositionFromArriving = getGraphicPositionsFromArrivingDate(
+				dateArriving.getTimeInMillis()).stream().filter(
+						gp -> gp.getHostessId() == hostessId && gp.getStatus().equals("FREE"))
+				.findFirst().get();
+		
+		List<GraphicPosition> graphicPositionsStrictInsideCourseTime = getGraphicPositionsStrictInsideCourseTime(
+				courseData.getDate().getTimeInMillis(),dateArriving.getTimeInMillis()).stream().filter(
+						gp -> gp.getHostessId() == hostessId && gp.getStatus().equals("FREE"))
+				.collect(Collectors.toList());
+		
+		insertGraphicPosition(-1, hostessId, -1,
+				graphicPositionFromLeaving.getTimeFrom().getTimeInMillis(),
+				courseData.getDate().getTimeInMillis(),
+				graphicPositionFromLeaving.getHourlyBid());
+		insertGraphicPosition(-1,hostessId, courseData.getId(),
+				courseData.getDate().getTimeInMillis(),
+				dateArriving.getTimeInMillis(),
+				graphicPositionFromLeaving.getHourlyBid());
+		insertGraphicPosition(-1, hostessId, -1,
+				dateArriving.getTimeInMillis(),
+				graphicPositionFromArriving.getTimeTo().getTimeInMillis(),
+				graphicPositionFromLeaving.getHourlyBid());
+		if(graphicPositionFromLeaving.getId() == graphicPositionFromArriving.getId())
+		{
+			deleteGraphicPosition(graphicPositionFromLeaving.getId());
+		}
+		else if(graphicPositionsStrictInsideCourseTime.isEmpty())
+		{
+			deleteGraphicPosition(graphicPositionFromLeaving.getId());
+			deleteGraphicPosition(graphicPositionFromArriving.getId());
+		}
+		else 
+		{
+			deleteGraphicPosition(graphicPositionFromLeaving.getId());
+			deleteGraphicPosition(graphicPositionFromArriving.getId());
+			graphicPositionsStrictInsideCourseTime.forEach(
+					gp -> deleteGraphicPosition(gp.getId()));
+		}
+	}
+
+	private void splitGraphicForDriver(int driverId, Course courseData) {
+		GraphicPosition graphicPositionFromLeaving = getGraphicPositionsFromLeavingDate(
+				courseData.getDate().getTimeInMillis()).stream().filter(
+						gp -> gp.getDriverId() == driverId && gp.getStatus().equals("FREE"))
+				.findFirst().get();
+		
+		Calendar dateArriving = Calendar.getInstance();
+		dateArriving.setTimeInMillis(courseData.getDate().getTimeInMillis());
+		dateArriving.add(Calendar.MINUTE, courseData.getCourseDrive().getTime());
+		
+		GraphicPosition graphicPositionFromArriving = getGraphicPositionsFromArrivingDate(
+				dateArriving.getTimeInMillis()).stream().filter(
+						gp -> gp.getDriverId() == driverId && gp.getStatus().equals("FREE"))
+				.findFirst().get();
+		
+		List<GraphicPosition> graphicPositionsStrictInsideCourseTime = getGraphicPositionsStrictInsideCourseTime(
+				courseData.getDate().getTimeInMillis(),dateArriving.getTimeInMillis()).stream().filter(
+						gp -> gp.getDriverId() == driverId && gp.getStatus().equals("FREE"))
+				.collect(Collectors.toList());
+		
+		insertGraphicPosition(driverId, -1, -1,
+				graphicPositionFromLeaving.getTimeFrom().getTimeInMillis(),
+				courseData.getDate().getTimeInMillis(),
+				graphicPositionFromLeaving.getHourlyBid());
+		insertGraphicPosition(driverId, -1, courseData.getId(),
+				courseData.getDate().getTimeInMillis(),
+				dateArriving.getTimeInMillis(),
+				graphicPositionFromLeaving.getHourlyBid());
+		insertGraphicPosition(driverId, -1, -1,
+				dateArriving.getTimeInMillis(),
+				graphicPositionFromArriving.getTimeTo().getTimeInMillis(),
+				graphicPositionFromLeaving.getHourlyBid());
+		if(graphicPositionFromLeaving.getId() == graphicPositionFromArriving.getId())
+		{
+			deleteGraphicPosition(graphicPositionFromLeaving.getId());
+		}
+		else if(graphicPositionsStrictInsideCourseTime.isEmpty())
+		{
+			deleteGraphicPosition(graphicPositionFromLeaving.getId());
+			deleteGraphicPosition(graphicPositionFromArriving.getId());
+		}
+		else 
+		{
+			deleteGraphicPosition(graphicPositionFromLeaving.getId());
+			deleteGraphicPosition(graphicPositionFromArriving.getId());
+			graphicPositionsStrictInsideCourseTime.forEach(
+					gp -> deleteGraphicPosition(gp.getId()));
+		}
+	}
+	
+	private void deleteGraphicPosition(int id) {
+		String query = "delete from GRAPHIC_POSITIONS where GRAPHIC_POSITION_ID="+ id;
+		Connection c = null;
+		try {
+			c = createConnection();
+			Statement statement = c.createStatement();
+			statement.executeUpdate(query);
+		}catch (SQLException ex) {
+			System.err.println("Deleting graphic position failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+	}
+
+	private void insertGraphicPosition(int driverId,int hostessId,int courseId,
+			long from, long to,float hourlyBid)
+	{
+		String query = null;
+		if(courseId != -1)
+		{
+			if(driverId != -1)
+				query = "INSERT INTO GRAPHIC_POSITIONS(GRAPHIC_POSITION_ID,DRIVER_ID,COURSE_ID"
+				+ ",TIME_FROM,TIME_TO,STATUS,HOURLY_BID) "
+				+ "VALUES(GRAPHIC_POSITIONS_SEQ.NEXTVAL,"+driverId+",?"
+				+ ",?,?,?,?)";
+			else
+				query = "INSERT INTO GRAPHIC_POSITIONS(GRAPHIC_POSITION_ID,HOSTESS_ID,COURSE_ID"
+						+ ",TIME_FROM,TIME_TO,STATUS,HOURLY_BID) "
+						+ "VALUES(GRAPHIC_POSITIONS_SEQ.NEXTVAL,"+hostessId+",?"
+						+ ",?,?,?,?)";
+		}
+		else
+		{
+			if(driverId != -1)
+				query = "INSERT INTO GRAPHIC_POSITIONS(GRAPHIC_POSITION_ID,DRIVER_ID"
+				+ ",TIME_FROM,TIME_TO,STATUS,HOURLY_BID) "
+				+ "VALUES(GRAPHIC_POSITIONS_SEQ.NEXTVAL,"+driverId
+				+ ",?,?,?,?)";
+			else
+				query = "INSERT INTO GRAPHIC_POSITIONS(GRAPHIC_POSITION_ID,HOSTESS_ID"
+						+ ",TIME_FROM,TIME_TO,STATUS,HOURLY_BID) "
+						+ "VALUES(GRAPHIC_POSITIONS_SEQ.NEXTVAL,"+hostessId
+						+ ",?,?,?,?)";
+		}
+		Connection c = null;
+		try {
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			int counter = 1;
+			if(courseId != -1)
+				statement.setInt(counter++, courseId);
+		//	statement.setDate(counter++, new Date(from));
+		//	statement.setDate(counter++, new Date(to));
+			statement.setTimestamp(counter++, new Timestamp(from));
+			statement.setTimestamp(counter++, new Timestamp(to));
+			if(courseId != -1)
+				statement.setString(counter++, "AT COURSE");
+			else
+				statement.setString(counter++, "FREE");
+			statement.setFloat(counter++, hourlyBid);
+			statement.executeUpdate();
+		}catch (SQLException ex) {
+			System.err.println("Inserting graphic position failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+	}
+
+	private int getDriverIdFromPersonId(int staffMemberId) {
+		String query = "select DRIVER_ID from DRIVERS where PERSON_ID=?";
+		Connection c = null;
+		int driverId = -1;
+		try {
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			statement.setInt(1, staffMemberId);
+			ResultSet rs = statement.executeQuery();
+			
+			if(rs.next()) 
+				driverId = rs.getInt("DRIVER_ID");
+			
+		}catch (SQLException ex) {
+			System.err.println("Getting drvier from person id failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+		
+		return driverId;
+	}
+	
+	private int getHostessIdFromPersonId(int staffMemberId) {
+		String query = "select HOSTESS_ID from HOSTESS where PERSON_ID=?";
+		Connection c = null;
+		int driverId = -1;
+		try {
+			c = createConnection();
+			PreparedStatement statement = c.prepareStatement(query);
+			statement.setInt(1, staffMemberId);
+			ResultSet rs = statement.executeQuery();
+			
+			if(rs.next()) 
+				driverId = rs.getInt("HOSTESS_ID");
+			
+		}catch (SQLException ex) {
+			System.err.println("Getting hostess from person id failed.\n" + ex.getSQLState());
+		} finally {
+			endConnection(c);
+		}
+		
+		return driverId;
 	}
 }

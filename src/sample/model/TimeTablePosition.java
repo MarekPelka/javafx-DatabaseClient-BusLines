@@ -3,20 +3,19 @@ package sample.model;
 public class TimeTablePosition {
 	private int id;
 	private int driveId;
-	private int categoryId;
 	private String weekDay;
 	private String leavingHour;
 	private String registerPhone;
-	
-	public TimeTablePosition(int id, int driveId,
-			int categoryId, String weekDay, String leavingHour, String registerPhone) 
-	{
+	private float timeCategoryRate;
+
+	public TimeTablePosition(int id, int driveId, String weekDay, String leavingHour, String registerPhone,
+			float timeCategoryRate) {
 		this.id = id;
 		this.driveId = driveId;
-		this.categoryId = categoryId;
 		this.weekDay = weekDay;
 		this.leavingHour = leavingHour;
 		this.registerPhone = registerPhone;
+		this.timeCategoryRate = timeCategoryRate;
 	}
 
 	public int getId() {
@@ -33,14 +32,6 @@ public class TimeTablePosition {
 
 	public void setDriveId(int driveId) {
 		this.driveId = driveId;
-	}
-
-	public int getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
 	}
 
 	public String getWeekDay() {
@@ -65,5 +56,13 @@ public class TimeTablePosition {
 
 	public void setRegisterPhone(String registerPhone) {
 		this.registerPhone = registerPhone;
+	}
+
+	public float getTimeCategoryRate() {
+		return timeCategoryRate;
+	}
+
+	public void setTimeCategoryRate(float timeCategoryRate) {
+		this.timeCategoryRate = timeCategoryRate;
 	}
 }
