@@ -24,6 +24,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import sample.model.Bus;
 import sample.model.BusModel;
+import sample.model.Category;
 import sample.model.Course;
 import sample.model.Drive;
 import sample.model.IntermediateDrive;
@@ -342,13 +343,16 @@ public class MainApp extends Application {
 			int serviceMileage,String state,String carServiceData) {
 		dbh.insertServicesIntoBusServiceBook(bus, services, serviceDate, serviceMileage, state, carServiceData);
 	}
+	public List<Category> getCategoryData() {
+		return dbh.getCategories();
+	}
 
 	public List<TimeTablePosition> getTimeTablePositionsForDrive(int driveId) {
 		return dbh.getTimeTablePositionfForDrive(driveId);
 	}
 
-	public List<Bus> getFreeBuses(Course courseData) {
-		return dbh.getFreeBuses(courseData);
+	public List<Bus> getFreeBusesByCategory(Course courseData, Category c) {
+		return dbh.getFreeBusesByCategory(courseData, c.getId());
 	}
 	
 	public ObservableList<Person> getFreeDrivers(Course courseData) {
@@ -362,4 +366,6 @@ public class MainApp extends Application {
 	public void insertCourse(Course courseData, List<Person> staff) {
 		dbh.insertCourse(courseData,staff);
 	}
+
+
 }
